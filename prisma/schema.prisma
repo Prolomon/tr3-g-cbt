@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Role {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
-  description String       @default("")
-  allowRetake Boolean      @default(false) @map("allow_retake")
-  createdAt   DateTime     @default(now()) @map("created_at")
+  id                  Int          @id @default(autoincrement())
+  name                String       @unique
+  description         String       @default("")
+  allowRetake         Boolean      @default(false) @map("allow_retake")
+  questionsPerAttempt Int?         @map("questions_per_attempt")
+  createdAt           DateTime     @default(now()) @map("created_at")
   questions   Question[]
   submissions Submission[]
 
@@ -21,7 +22,7 @@ model Role {
 
 model Question {
   id                 Int                @id @default(autoincrement())
-  roleId             Int                @map("role_id")
+  roleId             Int?               @map("role_id")
   questionType       String             @default("objective") @map("question_type")
   prompt             String
   options            Json               @default("[]")
@@ -30,7 +31,7 @@ model Question {
   points             Int                @default(1)
   isActive           Boolean            @default(true) @map("is_active")
   createdAt          DateTime           @default(now()) @map("created_at")
-  role               Role               @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  role               Role?              @relation(fields: [roleId], references: [id], onDelete: Cascade)
   answers            SubmissionAnswer[]
 
   @@map("questions")

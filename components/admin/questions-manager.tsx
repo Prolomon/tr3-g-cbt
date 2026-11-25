@@ -27,7 +27,7 @@ import type { AdminRole } from "./roles-manager"
 
 interface AdminQuestion {
   id: number
-  roleId: number
+  roleId: number | null
   roleName: string
   questionType: "objective" | "theory"
   prompt: string
@@ -50,8 +50,8 @@ export function QuestionsManager({
   const [filterRoleId, setFilterRoleId] = React.useState<string>("all")
 
   // Form state
-  const [roleId, setRoleId] = React.useState<string>("")
-  const effectiveRoleId = roleId || (roles[0] ? String(roles[0].id) : "")
+  const [roleId, setRoleId] = React.useState<string>("all")
+  const effectiveRoleId = roleId || "all"
   const [questionType, setQuestionType] = React.useState<"objective" | "theory">(
     "objective"
   )
@@ -84,10 +84,10 @@ export function QuestionsManager({
 
   async function handleCreateQuestion(e: React.FormEvent) {
     e.preventDefault()
-    if (!effectiveRoleId || !prompt.trim()) {
+    if (!prompt.trim()) {
       toast.add({
         title: "Incomplete Question",
-        description: "Select a role and enter a question prompt.",
+        description: "Enter a question prompt.",
         type: "error",
       })
       return
@@ -122,7 +122,7 @@ export function QuestionsManager({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          roleId: Number(effectiveRoleId),
+          roleId: effectiveRoleId === "all" ? null : Number(effectiveRoleId),
           questionType,
           prompt: prompt.trim(),
           options: questionType === "objective" ? cleanedOptions : [],
@@ -204,27 +204,22 @@ export function QuestionsManager({
             <div className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label>Target Role</Label>
-                {roles.length === 0 ? (
-                  <p className="text-xs text-amber-700">
-                    Create a role first.
-                  </p>
-                ) : (
-                  <Select
-                    value={effectiveRoleId}
-                    onValueChange={(val) => val && setRoleId(val)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select role..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {roles.map((r) => (
-                        <SelectItem key={r.id} value={String(r.id)}>
-                          {r.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+                <Select
+                  value={effectiveRoleId}
+                  onValueChange={(val) => val && setRoleId(val)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select role..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Roles (General)</SelectItem>
+                    {roles.map((r) => (
+                      <SelectItem key={r.id} value={String(r.id)}>
+                        {r.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-2">
@@ -360,7 +355,7 @@ export function QuestionsManager({
 
             <Button
               type="submit"
-              disabled={saving || roles.length === 0}
+              disabled={saving}
               className="w-full gap-2 bg-blue-600 text-white hover:bg-blue-700"
             >
               {saving ? (
@@ -394,7 +389,8 @@ export function QuestionsManager({
               <SelectValue placeholder="Filter by role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Roles</SelectItem>
+              <SelectItem value="all">All Questions</SelectItem>
+              <SelectItem value="global">All Roles (General)</SelectItem>
               {roles.map((r) => (
                 <SelectItem key={r.id} value={String(r.id)}>
                   {r.name}

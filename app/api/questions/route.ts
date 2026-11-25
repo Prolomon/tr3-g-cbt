@@ -13,9 +13,15 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
       }
 
-      const roleId = roleIdParam ? Number(roleIdParam) : undefined
+      const whereClause =
+        roleIdParam === "global"
+          ? { roleId: null }
+          : roleIdParam
+            ? { roleId: Number(roleIdParam) }
+            : undefined
+
       const rows = await prisma.question.findMany({
-        where: roleId ? { roleId } : undefined,
+        where: whereClause,
         include: { role: { select: { name: true } } },
         orderBy: { id: "asc" },
       })
@@ -23,7 +29,7 @@ export async function GET(request: Request) {
       const formatted = rows.map((q) => ({
         id: q.id,
         roleId: q.roleId,
-        roleName: q.role.name,
+        roleName: q.role?.name ?? "All Roles",
         questionType: q.questionType,
         prompt: q.prompt,
         options: Array.isArray(q.options) ? (q.options as string[]) : [],
@@ -45,8 +51,16 @@ export async function GET(request: Request) {
       )
     }
 
+    const role = await prisma.role.findUnique({
+      where: { id: roleId },
+      select: { questionsPerAttempt: true },
+    })
+
     const rows = await prisma.question.findMany({
-      where: { roleId, isActive: true },
+      where: {
+        isActive: true,
+        OR: [{ roleId }, { roleId: null }],
+      },
       orderBy: { id: "asc" },
       select: {
         id: true,
@@ -58,7 +72,18 @@ export async function GET(request: Request) {
       },
     })
 
-    const formatted = rows.map((q) => ({
+    // Fisher-Yates shuffle so every candidate gets a random order
+    const shuffled = [...rows]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+
+    const limit = role?.questionsPerAttempt
+    const selected =
+      limit && limit > 0 ? shuffled.slice(0, limit) : shuffled
+
+    const formatted = selected.map((q) => ({
       ...q,
       options: Array.isArray(q.options) ? (q.options as string[]) : [],
     }))
@@ -78,7 +103,7 @@ export async function POST(request: Request) {
     }
 
     const body = (await request.json()) as {
-      roleId?: number
+      roleId?: number | null
       questionType?: string
       prompt?: string
       options?: string[]
@@ -88,7 +113,8 @@ export async function POST(request: Request) {
       isActive?: boolean
     }
 
-    const roleId = Number(body.roleId)
+    const isAllRoles = body.roleId === null || body.roleId === undefined
+    const roleId = isAllRoles ? null : Number(body.roleId)
     const questionType =
       body.questionType === "theory" ? "theory" : "objective"
     const prompt = body.prompt?.trim()
@@ -99,9 +125,9 @@ export async function POST(request: Request) {
         : 1
     const isActive = body.isActive ?? true
 
-    if (!Number.isInteger(roleId) || roleId <= 0) {
+    if (!isAllRoles && (!Number.isInteger(roleId) || (roleId ?? 0) <= 0)) {
       return NextResponse.json(
-        { error: "Valid roleId is required." },
+        { error: "Valid roleId or All Roles is required." },
         { status: 400 }
       )
     }

@@ -59,6 +59,7 @@ interface RoleOption {
   id: number
   name: string
   description: string
+  questionsPerAttempt?: number | null
   activeQuestionCount: number
 }
 
@@ -531,12 +532,22 @@ export function PublicCbtPortal() {
                       <SelectValue placeholder="Select your role (e.g. Supervisor, Customer Service)..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {roles.map((role) => (
-                        <SelectItem key={role.id} value={String(role.id)}>
-                          {role.name} ({role.activeQuestionCount} question
-                          {role.activeQuestionCount === 1 ? "" : "s"})
-                        </SelectItem>
-                      ))}
+                      {roles.map((role) => {
+                        const shownCount =
+                          role.questionsPerAttempt &&
+                          role.questionsPerAttempt > 0
+                            ? Math.min(
+                                role.questionsPerAttempt,
+                                role.activeQuestionCount
+                              )
+                            : role.activeQuestionCount
+                        return (
+                          <SelectItem key={role.id} value={String(role.id)}>
+                            {role.name} ({shownCount} question
+                            {shownCount === 1 ? "" : "s"})
+                          </SelectItem>
+                        )
+                      })}
                     </SelectContent>
                   </Select>
                 )}

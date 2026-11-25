@@ -4,22 +4,29 @@ import { isAdminAuthenticated } from "@/lib/admin-auth"
 
 export async function GET() {
   try {
-    const rows = await prisma.role.findMany({
-      orderBy: { name: "asc" },
-      include: {
-        questions: {
-          select: { id: true, isActive: true },
+    const [rows, globalActiveCount] = await Promise.all([
+      prisma.role.findMany({
+        orderBy: { name: "asc" },
+        include: {
+          questions: {
+            select: { id: true, isActive: true },
+          },
         },
-      },
-    })
+      }),
+      prisma.question.count({
+        where: { roleId: null, isActive: true },
+      }),
+    ])
 
     const formatted = rows.map((r) => ({
       id: r.id,
       name: r.name,
       description: r.description,
       allowRetake: r.allowRetake,
+      questionsPerAttempt: r.questionsPerAttempt,
       createdAt: r.createdAt,
-      activeQuestionCount: r.questions.filter((q) => q.isActive).length,
+      activeQuestionCount:
+        r.questions.filter((q) => q.isActive).length + globalActiveCount,
       totalQuestionCount: r.questions.length,
     }))
 
@@ -41,11 +48,18 @@ export async function POST(request: Request) {
       name?: string
       description?: string
       allowRetake?: boolean
+      questionsPerAttempt?: number | null
     }
 
     const name = body.name?.trim()
     const description = body.description?.trim() ?? ""
     const allowRetake = Boolean(body.allowRetake)
+    const questionsPerAttempt =
+      typeof body.questionsPerAttempt === "number" &&
+      Number.isInteger(body.questionsPerAttempt) &&
+      body.questionsPerAttempt > 0
+        ? body.questionsPerAttempt
+        : null
 
     if (!name) {
       return NextResponse.json(
@@ -55,7 +69,7 @@ export async function POST(request: Request) {
     }
 
     const created = await prisma.role.create({
-      data: { name, description, allowRetake },
+      data: { name, description, allowRetake, questionsPerAttempt },
     })
 
     return NextResponse.json({ role: created }, { status: 201 })

@@ -21,12 +21,14 @@ export async function PATCH(
       name?: string
       description?: string
       allowRetake?: boolean
+      questionsPerAttempt?: number | null
     }
 
     const updates: {
       name?: string
       description?: string
       allowRetake?: boolean
+      questionsPerAttempt?: number | null
     } = {}
     if (typeof body.name === "string" && body.name.trim()) {
       updates.name = body.name.trim()
@@ -36,6 +38,14 @@ export async function PATCH(
     }
     if (typeof body.allowRetake === "boolean") {
       updates.allowRetake = body.allowRetake
+    }
+    if (body.questionsPerAttempt !== undefined) {
+      updates.questionsPerAttempt =
+        typeof body.questionsPerAttempt === "number" &&
+        Number.isInteger(body.questionsPerAttempt) &&
+        body.questionsPerAttempt > 0
+          ? body.questionsPerAttempt
+          : null
     }
 
     if (Object.keys(updates).length === 0) {

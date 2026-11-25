@@ -21,6 +21,7 @@ export interface AdminRole {
   name: string
   description: string
   allowRetake: boolean
+  questionsPerAttempt: number | null
   activeQuestionCount: number
   totalQuestionCount: number
 }
@@ -35,6 +36,7 @@ export function RolesManager({
   const [name, setName] = React.useState("")
   const [description, setDescription] = React.useState("")
   const [allowRetake, setAllowRetake] = React.useState(false)
+  const [questionsPerAttempt, setQuestionsPerAttempt] = React.useState("")
   const [saving, setSaving] = React.useState(false)
   const [deletingId, setDeletingId] = React.useState<number | null>(null)
 
@@ -44,6 +46,7 @@ export function RolesManager({
 
     try {
       setSaving(true)
+      const parsedLimit = Number(questionsPerAttempt)
       const res = await fetch("/api/roles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,6 +54,10 @@ export function RolesManager({
           name: name.trim(),
           description: description.trim(),
           allowRetake,
+          questionsPerAttempt:
+            Number.isInteger(parsedLimit) && parsedLimit > 0
+              ? parsedLimit
+              : null,
         }),
       })
       const data = await res.json()
@@ -64,6 +71,7 @@ export function RolesManager({
       setName("")
       setDescription("")
       setAllowRetake(false)
+      setQuestionsPerAttempt("")
       onChanged()
     } catch (err) {
       toast.add({
@@ -73,6 +81,31 @@ export function RolesManager({
       })
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleUpdateLimit(role: AdminRole, rawValue: string) {
+    const parsed = Number(rawValue)
+    const nextLimit =
+      rawValue.trim() !== "" && Number.isInteger(parsed) && parsed > 0
+        ? parsed
+        : null
+    if (nextLimit === role.questionsPerAttempt) return
+
+    const res = await fetch(`/api/roles/${role.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ questionsPerAttempt: nextLimit }),
+    })
+    if (res.ok) {
+      toast.add({
+        title: "Question Limit Updated",
+        description: nextLimit
+          ? `${role.name} will show ${nextLimit} shuffled questions per person.`
+          : `${role.name} will show all active questions (shuffled).`,
+        type: "info",
+      })
+      onChanged()
     }
   }
 
@@ -150,6 +183,22 @@ export function RolesManager({
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="qPerAttempt">
+                Questions per Candidate (Optional)
+              </Label>
+              <Input
+                id="qPerAttempt"
+                type="number"
+                min={1}
+                placeholder="Leave blank to show all (shuffled)"
+                value={questionsPerAttempt}
+                onChange={(e) => setQuestionsPerAttempt(e.target.value)}
+              />
+              <p className="text-xs text-slate-500">
+                Questions are randomly shuffled for each candidate.
+              </p>
+            </div>
             <div className="flex items-center justify-between rounded-xl border border-blue-100 bg-blue-50/40 px-3.5 py-2.5">
               <div>
                 <Label htmlFor="allowRetake" className="text-sm text-blue-950">
@@ -222,7 +271,19 @@ export function RolesManager({
                   ) : null}
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs text-slate-500">Qs/person:</span>
+                    <Input
+                      type="number"
+                      min={1}
+                      placeholder="All"
+                      defaultValue={role.questionsPerAttempt ?? ""}
+                      onBlur={(e) => handleUpdateLimit(role, e.target.value)}
+                      className="h-8 w-16 px-2 text-center text-xs"
+                      aria-label={`Questions per person for ${role.name}`}
+                    />
+                  </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-slate-500">Retake</span>
                     <Switch

@@ -87,12 +87,15 @@ export async function POST(request: Request) {
       )
     }
 
-    const roleQuestions = await prisma.question.findMany({
-      where: { roleId, isActive: true },
+    const allRoleQuestions = await prisma.question.findMany({
+      where: {
+        isActive: true,
+        OR: [{ roleId }, { roleId: null }],
+      },
       orderBy: { id: "asc" },
     })
 
-    if (roleQuestions.length === 0) {
+    if (allRoleQuestions.length === 0) {
       return NextResponse.json(
         { error: "No active questions found for this role." },
         { status: 400 }
@@ -103,8 +106,12 @@ export async function POST(request: Request) {
       number,
       { selectedOptionIndex: number; theoryAnswer: string }
     >()
+    const assignedOrder: number[] = []
     for (const item of answersInput) {
       if (Number.isInteger(item.questionId)) {
+        if (!answerMap.has(item.questionId)) {
+          assignedOrder.push(item.questionId)
+        }
         answerMap.set(item.questionId, {
           selectedOptionIndex: Number.isInteger(item.selectedOptionIndex)
             ? Number(item.selectedOptionIndex)
@@ -115,6 +122,22 @@ export async function POST(request: Request) {
               : "",
         })
       }
+    }
+
+    // Grade only the candidate's assigned shuffled subset (or all if none specified)
+    const questionById = new Map(allRoleQuestions.map((q) => [q.id, q]))
+    const roleQuestions =
+      assignedOrder.length > 0
+        ? assignedOrder
+            .map((id) => questionById.get(id))
+            .filter((q): q is (typeof allRoleQuestions)[number] => Boolean(q))
+        : allRoleQuestions
+
+    if (roleQuestions.length === 0) {
+      return NextResponse.json(
+        { error: "No valid questions matched this submission." },
+        { status: 400 }
+      )
     }
 
     const hasTheory = roleQuestions.some((q) => q.questionType === "theory")
