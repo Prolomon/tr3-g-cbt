@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String       @default("")
+  allowRetake Boolean      @default(false) @map("allow_retake")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  questions   Question[]
+  submissions Submission[]
+
+  @@map("roles")
+}
+
+model Question {
+  id                 Int                @id @default(autoincrement())
+  roleId             Int                @map("role_id")
+  questionType       String             @default("objective") @map("question_type")
+  prompt             String
+  options            Json               @default("[]")
+  correctOptionIndex Int                @default(-1) @map("correct_option_index")
+  explanation        String?
+  points             Int                @default(1)
+  isActive           Boolean            @default(true) @map("is_active")
+  createdAt          DateTime           @default(now()) @map("created_at")
+  role               Role               @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  answers            SubmissionAnswer[]
+
+  @@map("questions")
+}
+
+model Submission {
+  id            Int                @id @default(autoincrement())
+  fullName      String             @map("full_name")
+  email         String
+  phone         String
+  roleId        Int                @map("role_id")
+  score         Int
+  totalPoints   Int                @map("total_points")
+  percentage    Int
+  gradingStatus String             @default("graded") @map("grading_status")
+  advisorChip   String             @map("advisor_chip")
+  advisorMessage String            @map("advisor_message")
+  emailSent     Boolean            @default(false) @map("email_sent")
+  emailError    String?            @map("email_error")
+  submittedAt   DateTime           @default(now()) @map("submitted_at")
+  role          Role               @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  answers       SubmissionAnswer[]
+
+  @@map("submissions")
+}
+
+model SubmissionAnswer {
+  id                  Int        @id @default(autoincrement())
+  submissionId        Int        @map("submission_id")
+  questionId          Int        @map("question_id")
+  selectedOptionIndex Int        @default(-1) @map("selected_option_index")
+  theoryAnswer        String?    @map("theory_answer")
+  pointsAwarded       Int        @default(0) @map("points_awarded")
+  isCorrect           Boolean    @default(false) @map("is_correct")
+  submission          Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  question            Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("submission_answers")
+}
