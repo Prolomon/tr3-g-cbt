@@ -24,6 +24,7 @@ export async function GET() {
       description: r.description,
       allowRetake: r.allowRetake,
       questionsPerAttempt: r.questionsPerAttempt,
+      timeLimitMinutes: r.timeLimitMinutes,
       createdAt: r.createdAt,
       activeQuestionCount:
         r.questions.filter((q) => q.isActive).length + globalActiveCount,
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
       description?: string
       allowRetake?: boolean
       questionsPerAttempt?: number | null
+      timeLimitMinutes?: number | null
     }
 
     const name = body.name?.trim()
@@ -60,6 +62,12 @@ export async function POST(request: Request) {
       body.questionsPerAttempt > 0
         ? body.questionsPerAttempt
         : null
+    const timeLimitMinutes =
+      typeof body.timeLimitMinutes === "number" &&
+      Number.isInteger(body.timeLimitMinutes) &&
+      body.timeLimitMinutes > 0
+        ? body.timeLimitMinutes
+        : null
 
     if (!name) {
       return NextResponse.json(
@@ -69,7 +77,13 @@ export async function POST(request: Request) {
     }
 
     const created = await prisma.role.create({
-      data: { name, description, allowRetake, questionsPerAttempt },
+      data: {
+        name,
+        description,
+        allowRetake,
+        questionsPerAttempt,
+        timeLimitMinutes,
+      },
     })
 
     return NextResponse.json({ role: created }, { status: 201 })

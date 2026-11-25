@@ -13,6 +13,7 @@ model Role {
   description         String       @default("")
   allowRetake         Boolean      @default(false) @map("allow_retake")
   questionsPerAttempt Int?         @map("questions_per_attempt")
+  timeLimitMinutes    Int?         @map("time_limit_minutes")
   createdAt           DateTime     @default(now()) @map("created_at")
   questions   Question[]
   submissions Submission[]

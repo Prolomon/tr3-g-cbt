@@ -22,6 +22,7 @@ export async function PATCH(
       description?: string
       allowRetake?: boolean
       questionsPerAttempt?: number | null
+      timeLimitMinutes?: number | null
     }
 
     const updates: {
@@ -29,6 +30,7 @@ export async function PATCH(
       description?: string
       allowRetake?: boolean
       questionsPerAttempt?: number | null
+      timeLimitMinutes?: number | null
     } = {}
     if (typeof body.name === "string" && body.name.trim()) {
       updates.name = body.name.trim()
@@ -45,6 +47,14 @@ export async function PATCH(
         Number.isInteger(body.questionsPerAttempt) &&
         body.questionsPerAttempt > 0
           ? body.questionsPerAttempt
+          : null
+    }
+    if (body.timeLimitMinutes !== undefined) {
+      updates.timeLimitMinutes =
+        typeof body.timeLimitMinutes === "number" &&
+        Number.isInteger(body.timeLimitMinutes) &&
+        body.timeLimitMinutes > 0
+          ? body.timeLimitMinutes
           : null
     }
 

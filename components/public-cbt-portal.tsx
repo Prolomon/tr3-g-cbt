@@ -60,6 +60,7 @@ interface RoleOption {
   name: string
   description: string
   questionsPerAttempt?: number | null
+  timeLimitMinutes?: number | null
   activeQuestionCount: number
 }
 
@@ -122,6 +123,7 @@ interface DraftState {
   currentIndex: number
   answers: Record<number, number>
   theoryAnswers: Record<number, string>
+  examEndsAt: number | null
 }
 
 const STEPS: { key: Step; num: number; label: string }[] = [
@@ -151,6 +153,11 @@ export function PublicCbtPortal() {
   const [submitting, setSubmitting] = React.useState(false)
   const [result, setResult] = React.useState<SubmissionResult | null>(null)
   const [draftHydrated, setDraftHydrated] = React.useState(false)
+  const [examEndsAt, setExamEndsAt] = React.useState<number | null>(null)
+  const [remainingSeconds, setRemainingSeconds] = React.useState<number | null>(
+    null
+  )
+  const autoSubmittedRef = React.useRef(false)
 
   // Restore saved assessment progress from localStorage on mount
   React.useEffect(() => {
@@ -163,6 +170,9 @@ export function PublicCbtPortal() {
           if (parsed.email) setEmail(parsed.email)
           if (parsed.phone) setPhone(parsed.phone)
           if (parsed.selectedRoleId) setSelectedRoleId(parsed.selectedRoleId)
+          if (typeof parsed.examEndsAt === "number") {
+            setExamEndsAt(parsed.examEndsAt)
+          }
           if (Array.isArray(parsed.questions) && parsed.questions.length > 0) {
             setQuestions(parsed.questions)
             setAnswers(parsed.answers || {})
@@ -197,6 +207,7 @@ export function PublicCbtPortal() {
         currentIndex,
         answers,
         theoryAnswers,
+        examEndsAt,
       }
       window.localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft))
     } catch {
@@ -213,6 +224,7 @@ export function PublicCbtPortal() {
     currentIndex,
     answers,
     theoryAnswers,
+    examEndsAt,
   ])
 
   React.useEffect(() => {
@@ -277,6 +289,16 @@ export function PublicCbtPortal() {
       setAnswers({})
       setTheoryAnswers({})
       setCurrentIndex(0)
+      autoSubmittedRef.current = false
+      const limitMins = selectedRole?.timeLimitMinutes
+      if (limitMins && limitMins > 0) {
+        const endsAt = Date.now() + limitMins * 60 * 1000
+        setExamEndsAt(endsAt)
+        setRemainingSeconds(limitMins * 60)
+      } else {
+        setExamEndsAt(null)
+        setRemainingSeconds(null)
+      }
       setStep("exam")
     } catch (err) {
       toast.add({
@@ -290,58 +312,82 @@ export function PublicCbtPortal() {
     }
   }
 
-  async function handleSubmitExam() {
-    try {
-      setSubmitting(true)
-      const payload = {
-        fullName: fullName.trim(),
-        email: email.trim(),
-        phone: phone.trim(),
-        roleId: Number(selectedRoleId),
-        answers: questions.map((q) => ({
-          questionId: q.id,
-          selectedOptionIndex:
-            q.questionType === "objective" ? (answers[q.id] ?? -1) : -1,
-          theoryAnswer:
-            q.questionType === "theory" ? (theoryAnswers[q.id] ?? "") : "",
-        })),
+  const handleSubmitExam = React.useCallback(
+    async (isAutoSubmit = false) => {
+      try {
+        setSubmitting(true)
+        const payload = {
+          fullName: fullName.trim(),
+          email: email.trim(),
+          phone: phone.trim(),
+          roleId: Number(selectedRoleId),
+          answers: questions.map((q) => ({
+            questionId: q.id,
+            selectedOptionIndex:
+              q.questionType === "objective" ? (answers[q.id] ?? -1) : -1,
+            theoryAnswer:
+              q.questionType === "theory" ? (theoryAnswers[q.id] ?? "") : "",
+          })),
+        }
+
+        const res = await fetch("/api/submissions", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || "Submission failed.")
+
+        window.localStorage.removeItem(DRAFT_STORAGE_KEY)
+        setExamEndsAt(null)
+        setRemainingSeconds(null)
+        setResult(data as SubmissionResult)
+        setStep("result")
+        toast.add({
+          title: isAutoSubmit
+            ? "Time's Up — Auto-Submitted!"
+            : data.submission.gradingStatus === "pending_review"
+              ? "Assessment Submitted!"
+              : "Assessment Graded!",
+          description:
+            data.submission.gradingStatus === "pending_review"
+              ? "Your theory answers are pending admin review. Your final score will be emailed once graded."
+              : data.submission.emailSent
+                ? `Your score (${data.submission.percentage}%) has been emailed to ${email}.`
+                : "Your score is ready below.",
+          type: "success",
+        })
+      } catch (err) {
+        toast.add({
+          title: "Submission error",
+          description:
+            err instanceof Error ? err.message : "Could not submit answers.",
+          type: "error",
+        })
+      } finally {
+        setSubmitting(false)
       }
+    },
+    [fullName, email, phone, selectedRoleId, questions, answers, theoryAnswers]
+  )
 
-      const res = await fetch("/api/submissions", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || "Submission failed.")
+  // Countdown timer that auto-submits when time expires
+  React.useEffect(() => {
+    if (step !== "exam" || !examEndsAt) return
 
-      window.localStorage.removeItem(DRAFT_STORAGE_KEY)
-      setResult(data as SubmissionResult)
-      setStep("result")
-      toast.add({
-        title:
-          data.submission.gradingStatus === "pending_review"
-            ? "Assessment Submitted!"
-            : "Assessment Graded!",
-        description:
-          data.submission.gradingStatus === "pending_review"
-            ? "Your theory answers are pending admin review. Your final score will be emailed once graded."
-            : data.submission.emailSent
-              ? `Your score (${data.submission.percentage}%) has been emailed to ${email}.`
-              : "Your score is ready below.",
-        type: "success",
-      })
-    } catch (err) {
-      toast.add({
-        title: "Submission error",
-        description:
-          err instanceof Error ? err.message : "Could not submit answers.",
-        type: "error",
-      })
-    } finally {
-      setSubmitting(false)
+    const tick = () => {
+      const secs = Math.max(0, Math.ceil((examEndsAt - Date.now()) / 1000))
+      setRemainingSeconds(secs)
+      if (secs <= 0 && !autoSubmittedRef.current && !submitting) {
+        autoSubmittedRef.current = true
+        void handleSubmitExam(true)
+      }
     }
-  }
+
+    tick()
+    const timer = window.setInterval(tick, 1000)
+    return () => window.clearInterval(timer)
+  }, [step, examEndsAt, submitting, handleSubmitExam])
 
   function handleReset() {
     window.localStorage.removeItem(DRAFT_STORAGE_KEY)
@@ -350,6 +396,8 @@ export function PublicCbtPortal() {
     setQuestions([])
     setAnswers({})
     setTheoryAnswers({})
+    setExamEndsAt(null)
+    setRemainingSeconds(null)
     setCurrentIndex(0)
   }
 
@@ -544,7 +592,11 @@ export function PublicCbtPortal() {
                         return (
                           <SelectItem key={role.id} value={String(role.id)}>
                             {role.name} ({shownCount} question
-                            {shownCount === 1 ? "" : "s"})
+                            {shownCount === 1 ? "" : "s"}
+                            {role.timeLimitMinutes
+                              ? ` • ${role.timeLimitMinutes} min`
+                              : ""}
+                            )
                           </SelectItem>
                         )
                       })}
@@ -597,10 +649,29 @@ export function PublicCbtPortal() {
                     {selectedRole?.name}
                   </Badge>
                 </div>
-                <span className="font-semibold text-blue-700">
-                  {answeredCount} of {questions.length} answered ({progressPct}
-                  %)
-                </span>
+                <div className="flex items-center gap-3">
+                  {remainingSeconds !== null && (
+                    <Badge
+                      className={cn(
+                        "gap-1.5 px-3 py-1 font-mono text-xs font-bold",
+                        remainingSeconds <= 60
+                          ? "animate-pulse bg-red-600 text-white hover:bg-red-600"
+                          : "bg-blue-600 text-white hover:bg-blue-600"
+                      )}
+                    >
+                      <Clock className="size-3.5" />
+                      {String(Math.floor(remainingSeconds / 60)).padStart(
+                        2,
+                        "0"
+                      )}
+                      :{String(remainingSeconds % 60).padStart(2, "0")}
+                    </Badge>
+                  )}
+                  <span className="font-semibold text-blue-700">
+                    {answeredCount} of {questions.length} answered (
+                    {progressPct}%)
+                  </span>
+                </div>
               </div>
               <Progress value={progressPct} className="mt-3 h-2" />
 
@@ -792,7 +863,7 @@ export function PublicCbtPortal() {
                       <AlertDialogFooter>
                         <AlertDialogCancel>Review Answers</AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={handleSubmitExam}
+                          onClick={() => void handleSubmitExam(false)}
                           className="bg-blue-600 text-white hover:bg-blue-700"
                         >
                           Confirm &amp; Submit

@@ -22,6 +22,7 @@ export interface AdminRole {
   description: string
   allowRetake: boolean
   questionsPerAttempt: number | null
+  timeLimitMinutes: number | null
   activeQuestionCount: number
   totalQuestionCount: number
 }
@@ -37,6 +38,7 @@ export function RolesManager({
   const [description, setDescription] = React.useState("")
   const [allowRetake, setAllowRetake] = React.useState(false)
   const [questionsPerAttempt, setQuestionsPerAttempt] = React.useState("")
+  const [timeLimitMinutes, setTimeLimitMinutes] = React.useState("")
   const [saving, setSaving] = React.useState(false)
   const [deletingId, setDeletingId] = React.useState<number | null>(null)
 
@@ -47,6 +49,7 @@ export function RolesManager({
     try {
       setSaving(true)
       const parsedLimit = Number(questionsPerAttempt)
+      const parsedTime = Number(timeLimitMinutes)
       const res = await fetch("/api/roles", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -58,6 +61,8 @@ export function RolesManager({
             Number.isInteger(parsedLimit) && parsedLimit > 0
               ? parsedLimit
               : null,
+          timeLimitMinutes:
+            Number.isInteger(parsedTime) && parsedTime > 0 ? parsedTime : null,
         }),
       })
       const data = await res.json()
@@ -72,6 +77,7 @@ export function RolesManager({
       setDescription("")
       setAllowRetake(false)
       setQuestionsPerAttempt("")
+      setTimeLimitMinutes("")
       onChanged()
     } catch (err) {
       toast.add({
@@ -81,6 +87,31 @@ export function RolesManager({
       })
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleUpdateTimeLimit(role: AdminRole, rawValue: string) {
+    const parsed = Number(rawValue)
+    const nextTime =
+      rawValue.trim() !== "" && Number.isInteger(parsed) && parsed > 0
+        ? parsed
+        : null
+    if (nextTime === role.timeLimitMinutes) return
+
+    const res = await fetch(`/api/roles/${role.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ timeLimitMinutes: nextTime }),
+    })
+    if (res.ok) {
+      toast.add({
+        title: "Time Limit Updated",
+        description: nextTime
+          ? `${role.name} now has a ${nextTime}-minute timer (auto-submits when time is up).`
+          : `${role.name} is now untimed.`,
+        type: "info",
+      })
+      onChanged()
     }
   }
 
@@ -183,22 +214,34 @@ export function RolesManager({
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="qPerAttempt">
-                Questions per Candidate (Optional)
-              </Label>
-              <Input
-                id="qPerAttempt"
-                type="number"
-                min={1}
-                placeholder="Leave blank to show all (shuffled)"
-                value={questionsPerAttempt}
-                onChange={(e) => setQuestionsPerAttempt(e.target.value)}
-              />
-              <p className="text-xs text-slate-500">
-                Questions are randomly shuffled for each candidate.
-              </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="qPerAttempt">Questions / Person</Label>
+                <Input
+                  id="qPerAttempt"
+                  type="number"
+                  min={1}
+                  placeholder="All (shuffled)"
+                  value={questionsPerAttempt}
+                  onChange={(e) => setQuestionsPerAttempt(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="timeLimitMins">Time Limit (Minutes)</Label>
+                <Input
+                  id="timeLimitMins"
+                  type="number"
+                  min={1}
+                  placeholder="No limit"
+                  value={timeLimitMinutes}
+                  onChange={(e) => setTimeLimitMinutes(e.target.value)}
+                />
+              </div>
             </div>
+            <p className="text-xs text-slate-500">
+              Questions are randomly shuffled. If a time limit is set, the exam
+              auto-submits when time expires.
+            </p>
             <div className="flex items-center justify-between rounded-xl border border-blue-100 bg-blue-50/40 px-3.5 py-2.5">
               <div>
                 <Label htmlFor="allowRetake" className="text-sm text-blue-950">
@@ -273,7 +316,7 @@ export function RolesManager({
 
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-slate-500">Qs/person:</span>
+                    <span className="text-xs text-slate-500">Qs:</span>
                     <Input
                       type="number"
                       min={1}
@@ -282,6 +325,20 @@ export function RolesManager({
                       onBlur={(e) => handleUpdateLimit(role, e.target.value)}
                       className="h-8 w-16 px-2 text-center text-xs"
                       aria-label={`Questions per person for ${role.name}`}
+                    />
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs text-slate-500">Mins:</span>
+                    <Input
+                      type="number"
+                      min={1}
+                      placeholder="∞"
+                      defaultValue={role.timeLimitMinutes ?? ""}
+                      onBlur={(e) =>
+                        handleUpdateTimeLimit(role, e.target.value)
+                      }
+                      className="h-8 w-16 px-2 text-center text-xs"
+                      aria-label={`Time limit in minutes for ${role.name}`}
                     />
                   </div>
                   <div className="flex items-center gap-2">
