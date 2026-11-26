@@ -18,6 +18,11 @@ export const metadata: Metadata = {
   title: "TR3-G CBT — Role-Based Assessment Platform",
   description:
     "TR3-G Innovations Limited Computer-Based Testing platform with role-specific assessments, auto-marking, digital advisor feedback, and Brevo score delivery.",
+  icons: {
+    icon: "/img/tr3-g.webp",
+    shortcut: "/img/tr3-g.webp",
+    apple: "/img/tr3-g.webp",
+  },
 }
 
 export default function RootLayout({
