@@ -87,11 +87,17 @@ export async function POST(request: Request) {
       )
     }
 
+    const settings = await prisma.assessmentSettings.findUnique({
+      where: { id: 1 },
+    })
+
     const allRoleQuestions = await prisma.question.findMany({
-      where: {
-        isActive: true,
-        OR: [{ roleId }, { roleId: null }],
-      },
+      where: settings?.ignoreRoleFilter
+        ? { isActive: true }
+        : {
+            isActive: true,
+            OR: [{ roleId }, { roleId: null }],
+          },
       orderBy: { id: "asc" },
     })
 

@@ -147,7 +147,7 @@ export function QuestionsManager({
       setOptions(["", "", "", ""])
       setCorrectIndex("0")
       setExplanation("")
-      setPoints(questionType === "theory" ? "5" : "1")
+      setPoints("1")
       await loadQuestions()
       onChanged()
     } catch (err) {
@@ -229,7 +229,7 @@ export function QuestionsManager({
                   onValueChange={(val) => {
                     if (val === "objective" || val === "theory") {
                       setQuestionType(val)
-                      setPoints(val === "theory" ? "5" : "1")
+                      setPoints("1")
                     }
                   }}
                 >

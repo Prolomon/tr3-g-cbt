@@ -4,7 +4,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth"
 
 export async function GET() {
   try {
-    const [rows, globalActiveCount] = await Promise.all([
+    const [rows, globalActiveCount, totalActiveAll, settings] = await Promise.all([
       prisma.role.findMany({
         orderBy: { name: "asc" },
         include: {
@@ -16,20 +16,39 @@ export async function GET() {
       prisma.question.count({
         where: { roleId: null, isActive: true },
       }),
+      prisma.question.count({
+        where: { isActive: true },
+      }),
+      prisma.assessmentSettings.findUnique({ where: { id: 1 } }),
     ])
 
-    const formatted = rows.map((r) => ({
-      id: r.id,
-      name: r.name,
-      description: r.description,
-      allowRetake: r.allowRetake,
-      questionsPerAttempt: r.questionsPerAttempt,
-      timeLimitMinutes: r.timeLimitMinutes,
-      createdAt: r.createdAt,
-      activeQuestionCount:
-        r.questions.filter((q) => q.isActive).length + globalActiveCount,
-      totalQuestionCount: r.questions.length,
-    }))
+    const formatted = rows.map((r) => {
+      const effectiveQuestionsPerAttempt =
+        settings?.useGeneralQuestionCount && settings.generalQuestionCount
+          ? settings.generalQuestionCount
+          : r.questionsPerAttempt
+      const effectiveTimeLimitMinutes =
+        settings?.useGeneralTimeLimit && settings.generalTimeLimitMinutes
+          ? settings.generalTimeLimitMinutes
+          : r.timeLimitMinutes
+      const activeQuestionCount = settings?.ignoreRoleFilter
+        ? totalActiveAll
+        : r.questions.filter((q) => q.isActive).length + globalActiveCount
+
+      return {
+        id: r.id,
+        name: r.name,
+        description: r.description,
+        allowRetake: r.allowRetake,
+        questionsPerAttempt: r.questionsPerAttempt,
+        timeLimitMinutes: r.timeLimitMinutes,
+        effectiveQuestionsPerAttempt,
+        effectiveTimeLimitMinutes,
+        createdAt: r.createdAt,
+        activeQuestionCount,
+        totalQuestionCount: r.questions.length,
+      }
+    })
 
     return NextResponse.json({ roles: formatted })
   } catch (error) {

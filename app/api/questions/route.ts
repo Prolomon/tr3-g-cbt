@@ -51,16 +51,21 @@ export async function GET(request: Request) {
       )
     }
 
-    const role = await prisma.role.findUnique({
-      where: { id: roleId },
-      select: { questionsPerAttempt: true },
-    })
+    const [role, settings] = await Promise.all([
+      prisma.role.findUnique({
+        where: { id: roleId },
+        select: { questionsPerAttempt: true },
+      }),
+      prisma.assessmentSettings.findUnique({ where: { id: 1 } }),
+    ])
 
     const rows = await prisma.question.findMany({
-      where: {
-        isActive: true,
-        OR: [{ roleId }, { roleId: null }],
-      },
+      where: settings?.ignoreRoleFilter
+        ? { isActive: true }
+        : {
+            isActive: true,
+            OR: [{ roleId }, { roleId: null }],
+          },
       orderBy: { id: "asc" },
       select: {
         id: true,
@@ -79,7 +84,10 @@ export async function GET(request: Request) {
       ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
 
-    const limit = role?.questionsPerAttempt
+    const limit =
+      settings?.useGeneralQuestionCount && settings.generalQuestionCount
+        ? settings.generalQuestionCount
+        : role?.questionsPerAttempt
     const selected =
       limit && limit > 0 ? shuffled.slice(0, limit) : shuffled
 

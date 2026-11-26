@@ -61,6 +61,8 @@ interface RoleOption {
   description: string
   questionsPerAttempt?: number | null
   timeLimitMinutes?: number | null
+  effectiveQuestionsPerAttempt?: number | null
+  effectiveTimeLimitMinutes?: number | null
   activeQuestionCount: number
 }
 
@@ -290,7 +292,9 @@ export function PublicCbtPortal() {
       setTheoryAnswers({})
       setCurrentIndex(0)
       autoSubmittedRef.current = false
-      const limitMins = selectedRole?.timeLimitMinutes
+      const limitMins =
+        selectedRole?.effectiveTimeLimitMinutes ??
+        selectedRole?.timeLimitMinutes
       if (limitMins && limitMins > 0) {
         const endsAt = Date.now() + limitMins * 60 * 1000
         setExamEndsAt(endsAt)
@@ -581,22 +585,21 @@ export function PublicCbtPortal() {
                     </SelectTrigger>
                     <SelectContent>
                       {roles.map((role) => {
+                        const qLimit =
+                          role.effectiveQuestionsPerAttempt ??
+                          role.questionsPerAttempt
+                        const timeLimit =
+                          role.effectiveTimeLimitMinutes ??
+                          role.timeLimitMinutes
                         const shownCount =
-                          role.questionsPerAttempt &&
-                          role.questionsPerAttempt > 0
-                            ? Math.min(
-                                role.questionsPerAttempt,
-                                role.activeQuestionCount
-                              )
+                          qLimit && qLimit > 0
+                            ? Math.min(qLimit, role.activeQuestionCount)
                             : role.activeQuestionCount
                         return (
                           <SelectItem key={role.id} value={String(role.id)}>
                             {role.name} ({shownCount} question
                             {shownCount === 1 ? "" : "s"}
-                            {role.timeLimitMinutes
-                              ? ` • ${role.timeLimitMinutes} min`
-                              : ""}
-                            )
+                            {timeLimit ? ` • ${timeLimit} min` : ""})
                           </SelectItem>
                         )
                       })}

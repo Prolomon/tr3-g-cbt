@@ -632,7 +632,7 @@ async function run() {
         options: [],
         correctOptionIndex: -1,
         explanation: q.explanation,
-        points: 6,
+        points: 1,
         isActive: true,
       })),
     ],

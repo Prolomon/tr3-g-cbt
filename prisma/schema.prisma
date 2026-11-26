@@ -7,6 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AssessmentSettings {
+  id                      Int      @id @default(1)
+  useGeneralQuestionCount Boolean  @default(false) @map("use_general_question_count")
+  generalQuestionCount    Int?     @map("general_question_count")
+  useGeneralTimeLimit     Boolean  @default(false) @map("use_general_time_limit")
+  generalTimeLimitMinutes Int?     @map("general_time_limit_minutes")
+  ignoreRoleFilter        Boolean  @default(false) @map("ignore_role_filter")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  @@map("assessment_settings")
+}
+
 model Role {
   id                  Int          @id @default(autoincrement())
   name                String       @unique
