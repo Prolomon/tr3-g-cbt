@@ -31,6 +31,9 @@ export async function GET() {
         settings?.useGeneralTimeLimit && settings.generalTimeLimitMinutes
           ? settings.generalTimeLimitMinutes
           : r.timeLimitMinutes
+      const effectiveAllowRetake = settings?.useGeneralRetake
+        ? settings.generalAllowRetake
+        : r.allowRetake
       const activeQuestionCount = settings?.ignoreRoleFilter
         ? totalActiveAll
         : r.questions.filter((q) => q.isActive).length + globalActiveCount
@@ -44,6 +47,7 @@ export async function GET() {
         timeLimitMinutes: r.timeLimitMinutes,
         effectiveQuestionsPerAttempt,
         effectiveTimeLimitMinutes,
+        effectiveAllowRetake,
         createdAt: r.createdAt,
         activeQuestionCount,
         totalQuestionCount: r.questions.length,

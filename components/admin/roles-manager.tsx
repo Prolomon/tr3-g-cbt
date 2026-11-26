@@ -32,6 +32,8 @@ interface GeneralSettings {
   generalQuestionCount: number | null
   useGeneralTimeLimit: boolean
   generalTimeLimitMinutes: number | null
+  useGeneralRetake: boolean
+  generalAllowRetake: boolean
   ignoreRoleFilter: boolean
 }
 
@@ -57,6 +59,8 @@ export function RolesManager({
   const [generalQCount, setGeneralQCount] = React.useState("20")
   const [useGeneralTime, setUseGeneralTime] = React.useState(false)
   const [generalTime, setGeneralTime] = React.useState("20")
+  const [useGeneralRetake, setUseGeneralRetake] = React.useState(false)
+  const [generalAllowRetake, setGeneralAllowRetake] = React.useState(false)
   const [ignoreRoleFilter, setIgnoreRoleFilter] = React.useState(false)
 
   React.useEffect(() => {
@@ -80,6 +84,8 @@ export function RolesManager({
               ? String(data.settings.generalTimeLimitMinutes)
               : ""
           )
+          setUseGeneralRetake(data.settings.useGeneralRetake)
+          setGeneralAllowRetake(data.settings.generalAllowRetake)
           setIgnoreRoleFilter(data.settings.ignoreRoleFilter)
         }
       } finally {
@@ -109,6 +115,8 @@ export function RolesManager({
           useGeneralTimeLimit: useGeneralTime,
           generalTimeLimitMinutes:
             Number.isInteger(timeNum) && timeNum > 0 ? timeNum : null,
+          useGeneralRetake,
+          generalAllowRetake,
           ignoreRoleFilter,
         }),
       })
@@ -288,7 +296,7 @@ export function RolesManager({
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSaveGeneralSettings}>
-          <CardContent className="grid gap-4 pt-5 md:grid-cols-3">
+          <CardContent className="grid gap-4 pt-5 sm:grid-cols-2 lg:grid-cols-4">
             {/* General Question Count */}
             <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/30 p-4">
               <div className="flex items-center justify-between gap-2">
@@ -316,8 +324,8 @@ export function RolesManager({
               />
               <p className="text-xs text-slate-500">
                 {useGeneralQCount
-                  ? "ON: Overrides all roles to draw this many random questions per person."
-                  : "OFF: Uses each role's own Qs/person setting below."}
+                  ? "ON: Overrides all roles with this random question count."
+                  : "OFF: Uses each role's own Qs setting."}
               </p>
             </div>
 
@@ -348,8 +356,41 @@ export function RolesManager({
               />
               <p className="text-xs text-slate-500">
                 {useGeneralTime
-                  ? "ON: Overrides all roles with this countdown timer (auto-submits)."
-                  : "OFF: Uses each role's own Mins setting below."}
+                  ? "ON: Overrides all roles with this countdown timer."
+                  : "OFF: Uses each role's own Mins setting."}
+              </p>
+            </div>
+
+            {/* General Retake */}
+            <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/30 p-4">
+              <div className="flex items-center justify-between gap-2">
+                <Label
+                  htmlFor="useGenRetake"
+                  className="text-sm font-semibold text-blue-950"
+                >
+                  General Retake
+                </Label>
+                <Switch
+                  id="useGenRetake"
+                  checked={useGeneralRetake}
+                  onCheckedChange={setUseGeneralRetake}
+                  disabled={loadingSettings}
+                />
+              </div>
+              <div className="flex h-10 items-center justify-between rounded-lg border border-blue-100 bg-white px-3">
+                <span className="text-xs font-medium text-slate-700">
+                  Allow Retake
+                </span>
+                <Switch
+                  checked={generalAllowRetake}
+                  onCheckedChange={setGeneralAllowRetake}
+                  disabled={!useGeneralRetake || loadingSettings}
+                />
+              </div>
+              <p className="text-xs text-slate-500">
+                {useGeneralRetake
+                  ? `ON: ${generalAllowRetake ? "Allows" : "Disables"} retakes for all roles.`
+                  : "OFF: Uses each role's own Retake toggle."}
               </p>
             </div>
 
@@ -371,8 +412,8 @@ export function RolesManager({
               </div>
               <p className="text-xs leading-relaxed text-slate-600">
                 {ignoreRoleFilter
-                  ? "ON: Every candidate draws randomly from ALL active questions in the bank regardless of role."
-                  : "OFF: Candidates receive questions for their selected role + All Roles (General) questions."}
+                  ? "ON: Draws randomly from ALL active questions regardless of role."
+                  : "OFF: Draws from selected role + All Roles questions."}
               </p>
               <Button
                 type="submit"
@@ -558,6 +599,7 @@ export function RolesManager({
                       <span className="text-xs text-slate-500">Retake</span>
                       <Switch
                         checked={role.allowRetake}
+                        disabled={useGeneralRetake}
                         onCheckedChange={() => handleToggleRetake(role)}
                         aria-label={`Allow retake for ${role.name}`}
                       />

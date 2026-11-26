@@ -33,6 +33,8 @@ export async function PATCH(request: Request) {
       generalQuestionCount?: number | null
       useGeneralTimeLimit?: boolean
       generalTimeLimitMinutes?: number | null
+      useGeneralRetake?: boolean
+      generalAllowRetake?: boolean
       ignoreRoleFilter?: boolean
     }
 
@@ -52,6 +54,8 @@ export async function PATCH(request: Request) {
         ? body.generalTimeLimitMinutes
         : null
 
+    const useGeneralRetake = Boolean(body.useGeneralRetake)
+    const generalAllowRetake = Boolean(body.generalAllowRetake)
     const ignoreRoleFilter = Boolean(body.ignoreRoleFilter)
 
     const settings = await prisma.assessmentSettings.upsert({
@@ -61,6 +65,8 @@ export async function PATCH(request: Request) {
         generalQuestionCount,
         useGeneralTimeLimit,
         generalTimeLimitMinutes,
+        useGeneralRetake,
+        generalAllowRetake,
         ignoreRoleFilter,
       },
       create: {
@@ -69,6 +75,8 @@ export async function PATCH(request: Request) {
         generalQuestionCount,
         useGeneralTimeLimit,
         generalTimeLimitMinutes,
+        useGeneralRetake,
+        generalAllowRetake,
         ignoreRoleFilter,
       },
     })

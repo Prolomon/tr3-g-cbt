@@ -274,6 +274,10 @@ export async function POST(request: Request) {
       })
     }
 
+    const effectiveAllowRetake = settings?.useGeneralRetake
+      ? settings.generalAllowRetake
+      : role.allowRetake
+
     return NextResponse.json(
       {
         submission: {
@@ -282,7 +286,7 @@ export async function POST(request: Request) {
           email,
           phone,
           roleName: role.name,
-          allowRetake: role.allowRetake,
+          allowRetake: effectiveAllowRetake,
           score,
           totalPoints,
           percentage,
