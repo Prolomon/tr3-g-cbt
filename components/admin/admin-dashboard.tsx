@@ -200,18 +200,18 @@ export function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6">
-      <div className="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 p-6 text-white shadow-md shadow-blue-900/10">
-        <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-white/10 blur-3xl" />
+      <div className="relative overflow-hidden rounded-2xl border border-border bg-[#062950] p-6 text-[#ecf2f8] shadow-md">
+        <div className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-[#59a132]/20 blur-3xl" />
         <div className="relative flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="flex size-12 items-center justify-center rounded-xl bg-white/15 backdrop-blur-xs">
-              <ShieldCheck className="size-6 text-white" />
+            <div className="flex size-12 items-center justify-center rounded-xl bg-[#59a132]/20 text-[#59a132]">
+              <ShieldCheck className="size-6" />
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight sm:text-2xl">
                 Admin Control Center
               </h1>
-              <p className="mt-0.5 text-sm text-blue-100">
+              <p className="mt-0.5 text-sm text-[#8fa6be]">
                 Manage roles, set questions &amp; auto-mark answers, and track
                 live performance.
               </p>
@@ -223,7 +223,7 @@ export function AdminDashboard() {
             variant="secondary"
             size="sm"
             onClick={handleLogout}
-            className="gap-1.5 bg-white text-blue-700 shadow-xs hover:bg-blue-50"
+            className="gap-1.5 bg-[#59a132] text-[#041526] font-semibold hover:bg-[#437b25] hover:text-white"
           >
             <LogOut className="size-4" />
             Sign Out
@@ -232,31 +232,31 @@ export function AdminDashboard() {
       </div>
 
       <Tabs defaultValue="analytics" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 gap-1.5 rounded-xl border border-blue-100 bg-blue-50/80 p-1.5 sm:inline-grid sm:w-auto sm:grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 gap-1.5 rounded-xl border border-border bg-secondary/70 p-1.5 sm:inline-grid sm:w-auto sm:grid-cols-4">
           <TabsTrigger
             value="analytics"
-            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-blue-900/70 data-active:bg-white data-active:text-blue-700 data-active:shadow-xs"
+            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
           >
             <PieIcon className="size-4" />
             Analytics
           </TabsTrigger>
           <TabsTrigger
             value="roles"
-            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-blue-900/70 data-active:bg-white data-active:text-blue-700 data-active:shadow-xs"
+            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
           >
             <Briefcase className="size-4" />
             Roles
           </TabsTrigger>
           <TabsTrigger
             value="questions"
-            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-blue-900/70 data-active:bg-white data-active:text-blue-700 data-active:shadow-xs"
+            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
           >
             <HelpCircle className="size-4" />
             Questions
           </TabsTrigger>
           <TabsTrigger
             value="submissions"
-            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-blue-900/70 data-active:bg-white data-active:text-blue-700 data-active:shadow-xs"
+            className="gap-2 rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground data-active:bg-primary data-active:text-primary-foreground data-active:shadow-xs"
           >
             <Users className="size-4" />
             Submissions

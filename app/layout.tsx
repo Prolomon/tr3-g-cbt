@@ -17,7 +17,7 @@ const fontMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "TR3-G CBT — Role-Based Assessment Platform",
   description:
-    "Blue & White Computer-Based Testing platform with role-specific assessments, auto-marking, digital advisor feedback, and Brevo score delivery.",
+    "TR3-G Innovations Limited Computer-Based Testing platform with role-specific assessments, auto-marking, digital advisor feedback, and Brevo score delivery.",
 }
 
 export default function RootLayout({

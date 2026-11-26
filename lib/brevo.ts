@@ -88,27 +88,27 @@ export async function sendScoreEmail(
     .join("")
 
   const htmlContent = `
-    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;background:#f8fafc;padding:24px;">
-      <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #dbeafe;border-radius:12px;overflow:hidden;">
-        <div style="background:#2563eb;color:#ffffff;padding:24px;">
+    <div style="font-family:Inter,Segoe UI,Arial,sans-serif;background:#eef2f6;padding:24px;">
+      <div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #d1d9e2;border-radius:12px;overflow:hidden;">
+        <div style="background:#062950;color:#ffffff;padding:24px;">
           <h1 style="margin:0;font-size:20px;font-weight:700;">Assessment Result & Advisor Review</h1>
-          <p style="margin:6px 0 0;font-size:14px;opacity:0.9;">Role: ${escapeHtml(input.roleName)}</p>
+          <p style="margin:6px 0 0;font-size:14px;color:#8fa6be;">Role: ${escapeHtml(input.roleName)}</p>
         </div>
         <div style="padding:24px;">
-          <p style="margin:0 0 16px;font-size:15px;color:#0f172a;">
+          <p style="margin:0 0 16px;font-size:15px;color:#0a1e33;">
             Hello <strong>${escapeHtml(input.toName)}</strong>,
           </p>
-          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:16px;margin-bottom:20px;">
-            <div style="font-size:13px;color:#1e40af;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">
+          <div style="background:#f7fafc;border:1px solid #d1d9e2;border-radius:10px;padding:16px;margin-bottom:20px;">
+            <div style="font-size:13px;color:#0b3a6c;text-transform:uppercase;letter-spacing:0.05em;font-weight:600;">
               Your Score
             </div>
-            <div style="font-size:28px;font-weight:800;color:#1d4ed8;margin:4px 0;">
+            <div style="font-size:28px;font-weight:800;color:#3f7a22;margin:4px 0;">
               ${input.score} / ${input.totalPoints} (${input.percentage}%)
             </div>
-            <div style="display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;background:#2563eb;color:#ffffff;font-size:12px;font-weight:700;">
+            <div style="display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;background:#3f7a22;color:#ffffff;font-size:12px;font-weight:700;">
               Digital Advisor Chip: ${escapeHtml(input.advisorChip)}
             </div>
-            <p style="margin:10px 0 0;font-size:14px;color:#1e3a8a;line-height:1.5;">
+            <p style="margin:10px 0 0;font-size:14px;color:#0a1e33;line-height:1.5;">
               ${escapeHtml(input.advisorMessage)}
             </p>
           </div>

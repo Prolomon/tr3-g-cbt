@@ -12,28 +12,28 @@ function getChipStyle(label: string) {
   const normalized = label.toLowerCase()
   if (normalized.includes("excellent")) {
     return {
-      badge: "bg-blue-600 text-white border-blue-600",
-      card: "border-blue-200 bg-blue-50/80 text-blue-950",
+      badge: "bg-[#3f7a22] text-white border-[#3f7a22]",
+      card: "border-[#3f7a22]/30 bg-[#3f7a22]/10 text-foreground",
       icon: Sparkles,
     }
   }
   if (normalized.includes("great")) {
     return {
-      badge: "bg-blue-500 text-white border-blue-500",
-      card: "border-blue-200 bg-blue-50/50 text-blue-950",
+      badge: "bg-[#0b3a6c] text-white border-[#0b3a6c]",
+      card: "border-[#0b3a6c]/30 bg-[#0b3a6c]/10 text-foreground",
       icon: Award,
     }
   }
   if (normalized.includes("better")) {
     return {
-      badge: "bg-white text-blue-700 border-blue-300",
-      card: "border-blue-200 bg-white text-blue-950",
+      badge: "bg-card text-[#3f7a22] border-[#3f7a22]/40",
+      card: "border-border bg-card text-foreground",
       icon: TrendingUp,
     }
   }
   return {
-    badge: "bg-slate-100 text-slate-800 border-slate-300",
-    card: "border-slate-200 bg-slate-50 text-slate-900",
+    badge: "bg-secondary text-secondary-foreground border-border",
+    card: "border-border bg-card text-foreground",
     icon: BookOpen,
   }
 }

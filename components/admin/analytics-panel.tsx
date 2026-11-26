@@ -65,11 +65,11 @@ interface AnalyticsData {
 const pieChartConfig = {
   correct: {
     label: "Correct Answers",
-    color: "#2563eb",
+    color: "#3f7a22",
   },
   incorrect: {
     label: "Incorrect Answers",
-    color: "#bfdbfe",
+    color: "#0b3a6c",
   },
 } satisfies ChartConfig
 

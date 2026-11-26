@@ -426,34 +426,34 @@ export function PublicCbtPortal() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
       {/* Executive Hero Banner */}
-      <div className="relative mb-6 overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 p-6 text-white shadow-lg shadow-blue-900/10 sm:p-8">
-        <div className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-white/10 blur-3xl" />
+      <div className="relative mb-6 overflow-hidden rounded-2xl border border-border bg-[#062950] p-6 text-[#ecf2f8] shadow-lg sm:p-8">
+        <div className="pointer-events-none absolute -top-20 -right-20 size-64 rounded-full bg-[#59a132]/20 blur-3xl" />
         <div className="relative">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide uppercase backdrop-blur-xs">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-[#59a132]/40 bg-[#59a132]/15 px-3 py-1 font-mono text-xs font-semibold tracking-wide text-[#59a132] uppercase">
             <Sparkles className="size-3.5" />
-            Role-Based CBT Portal
+            TR3-G Role-Based CBT Portal
           </div>
-          <h1 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl">
+          <h1 className="mt-3 text-2xl font-bold tracking-tight text-white sm:text-3xl">
             Professional Competency Assessment
           </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-blue-100 sm:text-base">
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#8fa6be] sm:text-base">
             Complete your candidate profile and role-specific assessment.
             Objective questions are auto-marked immediately, while theory
             questions are scored by an administrator before your official
             report is emailed.
           </p>
 
-          <div className="mt-5 flex flex-wrap gap-4 text-xs font-medium text-blue-100/90">
+          <div className="mt-5 flex flex-wrap gap-4 text-xs font-medium text-[#ecf2f8]/90">
             <span className="inline-flex items-center gap-1.5">
-              <ShieldCheck className="size-4 text-blue-200" />
+              <ShieldCheck className="size-4 text-[#59a132]" />
               Role-Tailored Questions
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <Clock className="size-4 text-blue-200" />
+              <Clock className="size-4 text-[#59a132]" />
               Auto-Saved Drafts
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <MailCheck className="size-4 text-blue-200" />
+              <MailCheck className="size-4 text-[#59a132]" />
               Brevo Email Delivery
             </span>
           </div>
@@ -461,7 +461,7 @@ export function PublicCbtPortal() {
       </div>
 
       {/* Stepper */}
-      <div className="mb-8 grid grid-cols-3 gap-2 rounded-xl border border-blue-100 bg-white p-2 shadow-xs">
+      <div className="mb-8 grid grid-cols-3 gap-2 rounded-xl border border-border bg-card p-2 shadow-xs">
         {STEPS.map((s) => {
           const isActive = s.num === currentStepNum
           const isCompleted = s.num < currentStepNum
@@ -471,20 +471,20 @@ export function PublicCbtPortal() {
               className={cn(
                 "flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold transition-colors sm:text-sm",
                 isActive
-                  ? "bg-blue-600 text-white shadow-xs"
+                  ? "bg-primary text-primary-foreground shadow-xs"
                   : isCompleted
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-slate-400"
+                    ? "bg-secondary text-primary"
+                    : "text-muted-foreground"
               )}
             >
               <span
                 className={cn(
                   "flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold",
                   isActive
-                    ? "bg-white text-blue-700"
+                    ? "bg-white text-[#062950]"
                     : isCompleted
-                      ? "bg-blue-600 text-white"
-                      : "bg-slate-100 text-slate-500"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
                 )}
               >
                 {s.num}
