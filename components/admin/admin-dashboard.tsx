@@ -128,7 +128,7 @@ export function AdminDashboard() {
   if (checkingAuth) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-blue-600" />
+        <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -136,13 +136,13 @@ export function AdminDashboard() {
   if (!authenticated) {
     return (
       <div className="mx-auto max-w-md px-4 py-16">
-        <Card className="overflow-hidden border-blue-100 bg-white shadow-lg shadow-blue-950/5">
-          <div className="h-1.5 w-full bg-gradient-to-r from-blue-600 to-blue-500" />
-          <CardHeader className="border-b border-blue-50 p-6 text-center">
-            <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+        <Card className="overflow-hidden border-border bg-card shadow-lg shadow-black/5">
+          <div className="h-1.5 w-full bg-gradient-to-r from-[#062950] via-[#0b3a6c] to-primary" />
+          <CardHeader className="border-b border-border p-6 text-center">
+            <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-2xl bg-secondary text-primary ring-1 ring-border">
               <Lock className="size-5" />
             </div>
-            <CardTitle className="text-xl text-blue-950">
+            <CardTitle className="text-xl text-foreground">
               Admin Portal Access
             </CardTitle>
             <CardDescription className="mt-1">
@@ -153,7 +153,7 @@ export function AdminDashboard() {
           <form onSubmit={handleLogin}>
             <CardContent className="space-y-5 p-6">
               <div className="space-y-2">
-                <Label htmlFor="adminPass" className="text-blue-950">
+                <Label htmlFor="adminPass" className="text-foreground">
                   Admin Passcode
                 </Label>
                 <div className="relative">
@@ -170,7 +170,7 @@ export function AdminDashboard() {
                     type="button"
                     onClick={() => setShowPasscode((prev) => !prev)}
                     aria-label={showPasscode ? "Hide passcode" : "Show passcode"}
-                    className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 transition-colors hover:text-blue-600"
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground transition-colors hover:text-primary"
                   >
                     {showPasscode ? (
                       <EyeOff className="size-4" />
@@ -183,7 +183,7 @@ export function AdminDashboard() {
               <Button
                 type="submit"
                 disabled={loggingIn}
-                className="w-full bg-blue-600 text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700"
+                className="w-full bg-primary text-white shadow-sm shadow-primary/20 hover:bg-primary/90"
               >
                 {loggingIn ? (
                   <Loader2 className="size-4 animate-spin" />

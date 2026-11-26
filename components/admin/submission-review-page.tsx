@@ -218,7 +218,7 @@ export function SubmissionReviewPage({
   if (loading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="size-8 animate-spin text-blue-600" />
+        <Loader2 className="size-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -226,12 +226,12 @@ export function SubmissionReviewPage({
   if (unauthorized) {
     return (
       <div className="mx-auto max-w-md px-4 py-16">
-        <Card className="border-blue-100 bg-white text-center shadow-md">
+        <Card className="border-border bg-card text-center shadow-md">
           <CardHeader>
-            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-2xl bg-secondary text-primary">
               <Lock className="size-5" />
             </div>
-            <CardTitle className="text-blue-950">
+            <CardTitle className="text-foreground">
               Admin Sign-In Required
             </CardTitle>
             <CardDescription>
@@ -241,7 +241,7 @@ export function SubmissionReviewPage({
           </CardHeader>
           <CardFooter className="justify-center">
             <Link href="/admin">
-              <Button className="bg-blue-600 text-white hover:bg-blue-700">
+              <Button className="bg-primary text-white hover:bg-primary/90">
                 Go to Admin Sign-In
               </Button>
             </Link>
@@ -277,7 +277,7 @@ export function SubmissionReviewPage({
           <Button
             variant="outline"
             size="sm"
-            className="gap-1.5 border-blue-200 bg-white text-blue-700 hover:bg-blue-50"
+            className="gap-1.5 border-border bg-card text-primary hover:bg-secondary"
           >
             <ArrowLeft className="size-4" />
             Back to Admin Portal
@@ -290,7 +290,7 @@ export function SubmissionReviewPage({
             Pending Theory Grading
           </Badge>
         ) : (
-          <Badge className="gap-1.5 bg-blue-100 px-3 py-1 text-blue-800 hover:bg-blue-100">
+          <Badge className="gap-1.5 bg-primary/15 px-3 py-1 text-primary hover:bg-primary/15">
             <CheckCircle2 className="size-3.5" />
             Graded
           </Badge>
@@ -298,25 +298,25 @@ export function SubmissionReviewPage({
       </div>
 
       {/* Candidate Summary Card */}
-      <Card className="overflow-hidden border-blue-200 bg-white shadow-md shadow-blue-950/5">
-        <CardHeader className="border-b border-blue-100 bg-blue-50/40 p-6">
+      <Card className="overflow-hidden border-border bg-card shadow-md shadow-black/5">
+        <CardHeader className="border-b border-border bg-secondary/40 p-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <Badge className="mb-2 bg-blue-600 text-white hover:bg-blue-600">
+              <Badge className="mb-2 bg-primary text-white hover:bg-primary">
                 {submission.roleName}
               </Badge>
-              <CardTitle className="text-2xl text-blue-950">
+              <CardTitle className="text-2xl text-foreground">
                 {submission.fullName}
               </CardTitle>
               <CardDescription className="mt-0.5">
                 {submission.email} • {submission.phone}
               </CardDescription>
             </div>
-            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 px-6 py-3.5 text-center text-white shadow-sm">
+            <div className="rounded-2xl bg-gradient-to-br from-[#062950] to-[#0b3a6c] px-6 py-3.5 text-center text-white shadow-sm">
               <div className="text-3xl font-extrabold tracking-tight">
                 {submission.percentage}%
               </div>
-              <div className="text-xs font-medium text-blue-100">
+              <div className="text-xs font-medium text-[#8fa6be]">
                 {submission.score} / {submission.totalPoints} points
               </div>
             </div>
@@ -330,8 +330,8 @@ export function SubmissionReviewPage({
           />
 
           {submission.emailSent ? (
-            <Alert className="border-blue-200 bg-blue-50/60 text-blue-900">
-              <MailCheck className="size-4 text-blue-600" />
+            <Alert className="border-border bg-secondary/60 text-foreground">
+              <MailCheck className="size-4 text-primary" />
               <AlertTitle>Brevo Email Sent</AlertTitle>
               <AlertDescription>
                 Result email was delivered to{" "}
@@ -353,9 +353,9 @@ export function SubmissionReviewPage({
       </Card>
 
       {/* Questions & Theory Grading */}
-      <Card className="overflow-hidden border-blue-100 bg-white shadow-sm">
-        <CardHeader className="border-b border-blue-100/70 bg-blue-50/30 px-6 py-4">
-          <CardTitle className="text-base text-blue-950">
+      <Card className="overflow-hidden border-border bg-card shadow-sm">
+        <CardHeader className="border-b border-border bg-secondary/30 px-6 py-4">
+          <CardTitle className="text-base text-foreground">
             Answer Review &amp; Theory Grading ({reviewRows.length} Questions)
           </CardTitle>
           <CardDescription>
@@ -371,9 +371,9 @@ export function SubmissionReviewPage({
               className={cn(
                 "rounded-xl border border-l-4 p-5",
                 row.questionType === "theory"
-                  ? "border-blue-200 border-l-blue-600 bg-blue-50/20"
+                  ? "border-border border-l-primary bg-secondary/20"
                   : row.isCorrect
-                    ? "border-blue-100 border-l-blue-600 bg-white"
+                    ? "border-border border-l-primary bg-card"
                     : "border-red-100 border-l-red-500 bg-red-50/20"
               )}
             >
@@ -381,20 +381,20 @@ export function SubmissionReviewPage({
                 <div className="space-y-1.5">
                   <Badge
                     variant="outline"
-                    className="border-blue-200 bg-white text-xs text-blue-700"
+                    className="border-border bg-card text-xs text-primary"
                   >
                     {row.questionType === "theory"
                       ? `Theory (${row.maxPoints} pts max)`
                       : `Objective (${row.maxPoints} pt)`}
                   </Badge>
-                  <p className="font-semibold text-blue-950">
+                  <p className="font-semibold text-foreground">
                     {idx + 1}. {row.prompt}
                   </p>
                 </div>
 
                 {row.questionType === "objective" ? (
                   row.isCorrect ? (
-                    <Badge className="shrink-0 gap-1 bg-blue-100 text-blue-700 hover:bg-blue-100">
+                    <Badge className="shrink-0 gap-1 bg-primary/15 text-primary hover:bg-primary/15">
                       <CheckCircle2 className="size-3.5" />
                       Correct
                     </Badge>
@@ -408,26 +408,26 @@ export function SubmissionReviewPage({
               </div>
 
               {row.questionType === "theory" ? (
-                <div className="mt-4 space-y-3 rounded-xl border border-blue-100 bg-white p-4">
+                <div className="mt-4 space-y-3 rounded-xl border border-border bg-card p-4">
                   <div>
-                    <span className="text-xs font-semibold tracking-wide text-blue-700 uppercase">
+                    <span className="text-xs font-semibold tracking-wide text-primary uppercase">
                       Candidate Written Answer
                     </span>
-                    <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-slate-800">
+                    <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-foreground">
                       {row.theoryAnswer || "No written answer provided."}
                     </p>
                   </div>
 
                   {row.explanation ? (
-                    <div className="rounded-lg bg-blue-50/60 p-3 text-xs text-blue-900">
+                    <div className="rounded-lg bg-secondary/60 p-3 text-xs text-foreground">
                       <strong>Grading Guide:</strong> {row.explanation}
                     </div>
                   ) : null}
 
-                  <div className="flex flex-wrap items-center gap-3 border-t border-blue-50 pt-3">
+                  <div className="flex flex-wrap items-center gap-3 border-t border-border pt-3">
                     <Label
                       htmlFor={`score-${row.questionId}`}
-                      className="text-sm font-semibold text-blue-950"
+                      className="text-sm font-semibold text-foreground"
                     >
                       Score Awarded (0 – {row.maxPoints}):
                     </Label>
@@ -447,20 +447,20 @@ export function SubmissionReviewPage({
                           [row.questionId]: val,
                         }))
                       }}
-                      className="w-28 bg-white"
+                      className="w-28 bg-card"
                     />
                   </div>
                 </div>
               ) : (
                 <div className="mt-3 grid gap-1.5 text-sm sm:grid-cols-2">
-                  <p className="text-slate-700">
-                    <span className="font-medium text-slate-500">
+                  <p className="text-foreground/90">
+                    <span className="font-medium text-muted-foreground">
                       Selected:{" "}
                     </span>
                     {row.selectedOption}
                   </p>
-                  <p className="font-medium text-blue-700">
-                    <span className="text-blue-500">Correct: </span>
+                  <p className="font-medium text-primary">
+                    <span className="text-primary/80">Correct: </span>
                     {row.correctOption}
                   </p>
                 </div>
@@ -469,9 +469,9 @@ export function SubmissionReviewPage({
           ))}
         </CardContent>
 
-        <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-blue-100/70 bg-slate-50/60 px-6 py-4">
+        <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-border bg-secondary/40 px-6 py-4">
           <Link href="/admin">
-            <Button variant="outline" className="border-blue-200 text-blue-700">
+            <Button variant="outline" className="border-border text-primary">
               Return to Submissions
             </Button>
           </Link>
@@ -481,7 +481,7 @@ export function SubmissionReviewPage({
               type="button"
               disabled={savingGrades}
               onClick={handleFinalizeTheoryAndSend}
-              className="gap-2 bg-blue-600 text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700"
+              className="gap-2 bg-primary text-white shadow-sm shadow-primary/20 hover:bg-primary/90"
             >
               {savingGrades ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -495,7 +495,7 @@ export function SubmissionReviewPage({
               type="button"
               disabled={resending}
               onClick={handleResendEmail}
-              className="gap-2 bg-blue-600 text-white hover:bg-blue-700"
+              className="gap-2 bg-primary text-white hover:bg-primary/90"
             >
               {resending ? (
                 <Loader2 className="size-4 animate-spin" />

@@ -283,10 +283,10 @@ export function RolesManager({
   return (
     <div className="space-y-6">
       {/* General Exam Settings (Global Overrides) */}
-      <Card className="border-blue-200 bg-white shadow-xs">
-        <CardHeader className="border-b border-blue-50 bg-blue-50/40">
-          <CardTitle className="flex items-center gap-2 text-base text-blue-950">
-            <SlidersHorizontal className="size-4 text-blue-600" />
+      <Card className="border-border bg-card shadow-xs">
+        <CardHeader className="border-b border-border bg-secondary/40">
+          <CardTitle className="flex items-center gap-2 text-base text-foreground">
+            <SlidersHorizontal className="size-4 text-primary" />
             General Exam Settings (Global Overrides)
           </CardTitle>
           <CardDescription>
@@ -298,11 +298,11 @@ export function RolesManager({
         <form onSubmit={handleSaveGeneralSettings}>
           <CardContent className="grid gap-4 pt-5 sm:grid-cols-2 lg:grid-cols-4">
             {/* General Question Count */}
-            <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/30 p-4">
+            <div className="space-y-3 rounded-xl border border-border bg-secondary/30 p-4">
               <div className="flex items-center justify-between gap-2">
                 <Label
                   htmlFor="useGenQ"
-                  className="text-sm font-semibold text-blue-950"
+                  className="text-sm font-semibold text-foreground"
                 >
                   General Question Count
                 </Label>
@@ -320,9 +320,9 @@ export function RolesManager({
                 value={generalQCount}
                 onChange={(e) => setGeneralQCount(e.target.value)}
                 disabled={!useGeneralQCount || loadingSettings}
-                className="bg-white"
+                className="bg-card"
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 {useGeneralQCount
                   ? "ON: Overrides all roles with this random question count."
                   : "OFF: Uses each role's own Qs setting."}
@@ -330,11 +330,11 @@ export function RolesManager({
             </div>
 
             {/* General Time Limit */}
-            <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/30 p-4">
+            <div className="space-y-3 rounded-xl border border-border bg-secondary/30 p-4">
               <div className="flex items-center justify-between gap-2">
                 <Label
                   htmlFor="useGenTime"
-                  className="text-sm font-semibold text-blue-950"
+                  className="text-sm font-semibold text-foreground"
                 >
                   General Time Limit (Mins)
                 </Label>
@@ -352,9 +352,9 @@ export function RolesManager({
                 value={generalTime}
                 onChange={(e) => setGeneralTime(e.target.value)}
                 disabled={!useGeneralTime || loadingSettings}
-                className="bg-white"
+                className="bg-card"
               />
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 {useGeneralTime
                   ? "ON: Overrides all roles with this countdown timer."
                   : "OFF: Uses each role's own Mins setting."}
@@ -362,11 +362,11 @@ export function RolesManager({
             </div>
 
             {/* General Retake */}
-            <div className="space-y-3 rounded-xl border border-blue-100 bg-blue-50/30 p-4">
+            <div className="space-y-3 rounded-xl border border-border bg-secondary/30 p-4">
               <div className="flex items-center justify-between gap-2">
                 <Label
                   htmlFor="useGenRetake"
-                  className="text-sm font-semibold text-blue-950"
+                  className="text-sm font-semibold text-foreground"
                 >
                   General Retake
                 </Label>
@@ -377,8 +377,8 @@ export function RolesManager({
                   disabled={loadingSettings}
                 />
               </div>
-              <div className="flex h-10 items-center justify-between rounded-lg border border-blue-100 bg-white px-3">
-                <span className="text-xs font-medium text-slate-700">
+              <div className="flex h-10 items-center justify-between rounded-lg border border-border bg-card px-3">
+                <span className="text-xs font-medium text-foreground/90">
                   Allow Retake
                 </span>
                 <Switch
@@ -387,7 +387,7 @@ export function RolesManager({
                   disabled={!useGeneralRetake || loadingSettings}
                 />
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 {useGeneralRetake
                   ? `ON: ${generalAllowRetake ? "Allows" : "Disables"} retakes for all roles.`
                   : "OFF: Uses each role's own Retake toggle."}
@@ -395,11 +395,11 @@ export function RolesManager({
             </div>
 
             {/* Ignore Role Filter */}
-            <div className="flex flex-col justify-between space-y-3 rounded-xl border border-blue-100 bg-blue-50/30 p-4">
+            <div className="flex flex-col justify-between space-y-3 rounded-xl border border-border bg-secondary/30 p-4">
               <div className="flex items-center justify-between gap-2">
                 <Label
                   htmlFor="ignoreRole"
-                  className="text-sm font-semibold text-blue-950"
+                  className="text-sm font-semibold text-foreground"
                 >
                   Not Based on Role
                 </Label>
@@ -410,7 +410,7 @@ export function RolesManager({
                   disabled={loadingSettings}
                 />
               </div>
-              <p className="text-xs leading-relaxed text-slate-600">
+              <p className="text-xs leading-relaxed text-muted-foreground">
                 {ignoreRoleFilter
                   ? "ON: Draws randomly from ALL active questions regardless of role."
                   : "OFF: Draws from selected role + All Roles questions."}
@@ -418,7 +418,7 @@ export function RolesManager({
               <Button
                 type="submit"
                 disabled={savingSettings || loadingSettings}
-                className="w-full gap-2 bg-blue-600 text-white hover:bg-blue-700"
+                className="w-full gap-2 bg-primary text-white hover:bg-primary/90"
               >
                 {savingSettings ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -433,10 +433,10 @@ export function RolesManager({
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-5">
-        <Card className="border-blue-100 bg-white lg:col-span-2">
-          <CardHeader className="border-b border-blue-50">
-            <CardTitle className="flex items-center gap-2 text-base text-blue-950">
-              <Plus className="size-4 text-blue-600" />
+        <Card className="border-border bg-card lg:col-span-2">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <Plus className="size-4 text-primary" />
               Add New Role
             </CardTitle>
             <CardDescription>
@@ -489,16 +489,16 @@ export function RolesManager({
                   />
                 </div>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Questions are randomly shuffled. If a time limit is set, the
                 exam auto-submits when time expires.
               </p>
-              <div className="flex items-center justify-between rounded-xl border border-blue-100 bg-blue-50/40 px-3.5 py-2.5">
+              <div className="flex items-center justify-between rounded-xl border border-border bg-secondary/40 px-3.5 py-2.5">
                 <div>
-                  <Label htmlFor="allowRetake" className="text-sm text-blue-950">
+                  <Label htmlFor="allowRetake" className="text-sm text-foreground">
                     Allow Retake
                   </Label>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     Show &ldquo;Take Another Assessment&rdquo; button after
                     submission
                   </p>
@@ -512,7 +512,7 @@ export function RolesManager({
               <Button
                 type="submit"
                 disabled={saving}
-                className="w-full gap-2 bg-blue-600 text-white hover:bg-blue-700"
+                className="w-full gap-2 bg-primary text-white hover:bg-primary/90"
               >
                 {saving ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -525,10 +525,10 @@ export function RolesManager({
           </form>
         </Card>
 
-        <Card className="border-blue-100 bg-white lg:col-span-3">
-          <CardHeader className="border-b border-blue-50">
-            <CardTitle className="flex items-center gap-2 text-base text-blue-950">
-              <Briefcase className="size-4 text-blue-600" />
+        <Card className="border-border bg-card lg:col-span-3">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <Briefcase className="size-4 text-primary" />
               Configured Roles ({roles.length})
             </CardTitle>
             <CardDescription>
@@ -536,7 +536,7 @@ export function RolesManager({
               above are ON).
             </CardDescription>
           </CardHeader>
-          <CardContent className="divide-y divide-blue-50 pt-2">
+          <CardContent className="divide-y divide-border pt-2">
             {roles.length === 0 ? (
               <p className="py-8 text-center text-sm text-muted-foreground">
                 No roles added yet. Add your first role on the left.
@@ -549,12 +549,12 @@ export function RolesManager({
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-blue-950">
+                      <span className="font-semibold text-foreground">
                         {role.name}
                       </span>
                       <Badge
                         variant="secondary"
-                        className="bg-blue-50 text-blue-700"
+                        className="bg-secondary text-primary"
                       >
                         {role.activeQuestionCount} active Qs
                       </Badge>
@@ -568,7 +568,7 @@ export function RolesManager({
 
                   <div className="flex flex-wrap items-center gap-3">
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-slate-500">Qs:</span>
+                      <span className="text-xs text-muted-foreground">Qs:</span>
                       <Input
                         type="number"
                         min={1}
@@ -581,7 +581,7 @@ export function RolesManager({
                       />
                     </div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-slate-500">Mins:</span>
+                      <span className="text-xs text-muted-foreground">Mins:</span>
                       <Input
                         type="number"
                         min={1}
@@ -596,7 +596,7 @@ export function RolesManager({
                       />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-500">Retake</span>
+                      <span className="text-xs text-muted-foreground">Retake</span>
                       <Switch
                         checked={role.allowRetake}
                         disabled={useGeneralRetake}

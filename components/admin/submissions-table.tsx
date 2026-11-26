@@ -95,9 +95,9 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
   }
 
   return (
-    <Card className="border-blue-100 bg-white">
-      <CardHeader className="border-b border-blue-50">
-        <CardTitle className="text-base text-blue-950">
+    <Card className="border-border bg-card">
+      <CardHeader className="border-b border-border">
+        <CardTitle className="text-base text-foreground">
           Candidate Submissions ({submissions.length})
         </CardTitle>
         <CardDescription>
@@ -108,7 +108,7 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
       <CardContent className="pt-4">
         {loading ? (
           <div className="flex justify-center py-10">
-            <Loader2 className="size-6 animate-spin text-blue-600" />
+            <Loader2 className="size-6 animate-spin text-primary" />
           </div>
         ) : submissions.length === 0 ? (
           <p className="py-10 text-center text-sm text-muted-foreground">
@@ -132,7 +132,7 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
                 {submissions.map((sub) => (
                   <TableRow key={sub.id}>
                     <TableCell>
-                      <div className="font-medium text-blue-950">
+                      <div className="font-medium text-foreground">
                         {sub.fullName}
                       </div>
                       <div className="text-xs text-muted-foreground">
@@ -142,7 +142,7 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
                     <TableCell>
                       <Badge
                         variant="secondary"
-                        className="bg-blue-50 text-blue-700"
+                        className="bg-secondary text-primary"
                       >
                         {sub.roleName}
                       </Badge>
@@ -154,13 +154,13 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
                           Grade Theory
                         </Badge>
                       ) : (
-                        <Badge className="gap-1 bg-blue-50 text-blue-700 hover:bg-blue-50">
+                        <Badge className="gap-1 bg-secondary text-primary hover:bg-secondary">
                           <CheckCircle2 className="size-3" />
                           Graded
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell className="font-semibold text-blue-950">
+                    <TableCell className="font-semibold text-foreground">
                       {sub.score}/{sub.totalPoints} ({sub.percentage}%)
                     </TableCell>
                     <TableCell>
@@ -168,7 +168,7 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
                     </TableCell>
                     <TableCell>
                       {sub.emailSent ? (
-                        <Badge className="gap-1 bg-blue-100 text-blue-700 hover:bg-blue-100">
+                        <Badge className="gap-1 bg-primary/15 text-primary hover:bg-primary/15">
                           <MailCheck className="size-3" />
                           Sent
                         </Badge>
@@ -195,8 +195,8 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
                           size="sm"
                           className={
                             sub.gradingStatus === "pending_review"
-                              ? "gap-1.5 bg-blue-600 text-white hover:bg-blue-700"
-                              : "gap-1.5 border-blue-200 text-blue-700 hover:bg-blue-50"
+                              ? "gap-1.5 bg-primary text-white hover:bg-primary/90"
+                              : "gap-1.5 border-border text-primary hover:bg-secondary"
                           }
                         >
                           {sub.gradingStatus === "pending_review" ? (
@@ -226,7 +226,7 @@ export function SubmissionsTable({ refreshKey }: { refreshKey: number }) {
                             ? "Grade theory questions first"
                             : "Send / Resend Brevo Email"
                         }
-                        className="text-blue-700 hover:bg-blue-50"
+                        className="text-primary hover:bg-secondary"
                       >
                         {resendingId === sub.id ? (
                           <Loader2 className="size-4 animate-spin" />

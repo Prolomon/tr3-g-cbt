@@ -481,7 +481,7 @@ export function PublicCbtPortal() {
                 className={cn(
                   "flex size-6 shrink-0 items-center justify-center rounded-full text-xs font-bold",
                   isActive
-                    ? "bg-white text-[#062950]"
+                    ? "bg-card text-[#062950]"
                     : isCompleted
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground"
@@ -504,15 +504,15 @@ export function PublicCbtPortal() {
 
       {/* STEP 1: REGISTRATION */}
       {step === "register" && (
-        <Card className="overflow-hidden border-blue-100 bg-white shadow-md shadow-blue-950/5">
-          <CardHeader className="border-b border-blue-100/70 bg-blue-50/40 px-6 py-5">
-            <CardTitle className="flex items-center gap-2.5 text-lg text-blue-950">
-              <div className="flex size-8 items-center justify-center rounded-lg bg-blue-600/10 text-blue-600">
+        <Card className="overflow-hidden border-border bg-card shadow-md shadow-black/5">
+          <CardHeader className="border-b border-border bg-secondary/40 px-6 py-5">
+            <CardTitle className="flex items-center gap-2.5 text-lg text-foreground">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
                 <UserCheck className="size-4" />
               </div>
               Candidate Information
             </CardTitle>
-            <CardDescription className="text-slate-600">
+            <CardDescription className="text-muted-foreground">
               Provide your contact details and select your assigned role to
               begin.
             </CardDescription>
@@ -520,7 +520,7 @@ export function PublicCbtPortal() {
           <form onSubmit={handleStartExam}>
             <CardContent className="grid gap-5 p-6 sm:grid-cols-2">
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="fullName" className="text-blue-950">
+                <Label htmlFor="fullName" className="text-foreground">
                   Full Name
                 </Label>
                 <Input
@@ -533,7 +533,7 @@ export function PublicCbtPortal() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-blue-950">
+                <Label htmlFor="email" className="text-foreground">
                   Email Address
                 </Label>
                 <Input
@@ -547,7 +547,7 @@ export function PublicCbtPortal() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-blue-950">
+                <Label htmlFor="phone" className="text-foreground">
                   Phone Number
                 </Label>
                 <Input
@@ -561,16 +561,16 @@ export function PublicCbtPortal() {
               </div>
 
               <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="role" className="text-blue-950">
+                <Label htmlFor="role" className="text-foreground">
                   Assessment Role
                 </Label>
                 {loadingRoles ? (
-                  <div className="flex h-10 items-center gap-2 rounded-lg border border-blue-100 px-3.5 text-sm text-muted-foreground">
-                    <Loader2 className="size-4 animate-spin text-blue-600" />
+                  <div className="flex h-10 items-center gap-2 rounded-lg border border-border px-3.5 text-sm text-muted-foreground">
+                    <Loader2 className="size-4 animate-spin text-primary" />
                     Loading available roles...
                   </div>
                 ) : roles.length === 0 ? (
-                  <div className="rounded-xl border border-blue-200 bg-blue-50/50 p-4 text-sm text-blue-900">
+                  <div className="rounded-xl border border-border bg-secondary/50 p-4 text-sm text-foreground">
                     No roles have been configured yet. Please ask an
                     administrator to add roles and questions in the{" "}
                     <strong>Admin Portal</strong>.
@@ -607,21 +607,21 @@ export function PublicCbtPortal() {
                   </Select>
                 )}
                 {selectedRole?.description ? (
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     {selectedRole.description}
                   </p>
                 ) : null}
               </div>
             </CardContent>
 
-            <CardFooter className="flex items-center justify-between border-t border-blue-100/70 bg-slate-50/60 px-6 py-4">
-              <p className="text-xs text-slate-500">
+            <CardFooter className="flex items-center justify-between border-t border-border bg-secondary/40 px-6 py-4">
+              <p className="text-xs text-muted-foreground">
                 Your progress is saved locally until you submit.
               </p>
               <Button
                 type="submit"
                 disabled={loadingRoles || loadingQuestions || roles.length === 0}
-                className="gap-2 bg-blue-600 text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700"
+                className="gap-2 bg-primary text-white shadow-sm shadow-primary/20 hover:bg-primary/90"
               >
                 {loadingQuestions ? (
                   <>
@@ -643,12 +643,12 @@ export function PublicCbtPortal() {
       {/* STEP 2: EXAM */}
       {step === "exam" && currentQuestion && (
         <div className="space-y-6">
-          <Card className="border-blue-100 bg-white shadow-sm">
+          <Card className="border-border bg-card shadow-sm">
             <CardContent className="p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-blue-950">{fullName}</span>
-                  <Badge variant="secondary" className="bg-blue-50 text-blue-700">
+                  <span className="font-semibold text-foreground">{fullName}</span>
+                  <Badge variant="secondary" className="bg-secondary text-primary">
                     {selectedRole?.name}
                   </Badge>
                 </div>
@@ -659,7 +659,7 @@ export function PublicCbtPortal() {
                         "gap-1.5 px-3 py-1 font-mono text-xs font-bold",
                         remainingSeconds <= 60
                           ? "animate-pulse bg-red-600 text-white hover:bg-red-600"
-                          : "bg-blue-600 text-white hover:bg-blue-600"
+                          : "bg-primary text-white hover:bg-primary"
                       )}
                     >
                       <Clock className="size-3.5" />
@@ -670,7 +670,7 @@ export function PublicCbtPortal() {
                       :{String(remainingSeconds % 60).padStart(2, "0")}
                     </Badge>
                   )}
-                  <span className="font-semibold text-blue-700">
+                  <span className="font-semibold text-primary">
                     {answeredCount} of {questions.length} answered (
                     {progressPct}%)
                   </span>
@@ -690,10 +690,10 @@ export function PublicCbtPortal() {
                       className={cn(
                         "flex size-9 items-center justify-center rounded-lg border text-xs font-semibold transition-all",
                         isCurrent
-                          ? "border-blue-600 bg-blue-600 text-white shadow-xs"
+                          ? "border-primary bg-primary text-white shadow-xs"
                           : isAnswered
-                            ? "border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
-                            : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                            ? "border-border bg-secondary text-primary hover:bg-primary/15"
+                            : "border-border bg-card text-muted-foreground hover:bg-secondary/50"
                       )}
                     >
                       {idx + 1}
@@ -704,28 +704,28 @@ export function PublicCbtPortal() {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden border-blue-100 bg-white shadow-md shadow-blue-950/5">
-            <CardHeader className="border-b border-blue-100/70 bg-blue-50/30 p-6">
+          <Card className="overflow-hidden border-border bg-card shadow-md shadow-black/5">
+            <CardHeader className="border-b border-border bg-secondary/30 p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Badge className="bg-blue-600 text-white hover:bg-blue-600">
+                  <Badge className="bg-primary text-white hover:bg-primary">
                     Question {currentIndex + 1} of {questions.length}
                   </Badge>
                   <Badge
                     variant="outline"
-                    className="border-blue-200 bg-white text-blue-700"
+                    className="border-border bg-card text-primary"
                   >
                     {currentQuestion.questionType === "theory"
                       ? "Theory (Written)"
                       : "Objective"}
                   </Badge>
                 </div>
-                <span className="text-xs font-semibold text-slate-500">
+                <span className="text-xs font-semibold text-muted-foreground">
                   {currentQuestion.points} point
                   {currentQuestion.points === 1 ? "" : "s"}
                 </span>
               </div>
-              <CardTitle className="mt-3 text-lg leading-relaxed text-blue-950">
+              <CardTitle className="mt-3 text-lg leading-relaxed text-foreground">
                 {currentQuestion.prompt}
               </CardTitle>
             </CardHeader>
@@ -735,9 +735,9 @@ export function PublicCbtPortal() {
                 <div className="space-y-2.5">
                   <Label
                     htmlFor={`theory-${currentQuestion.id}`}
-                    className="flex items-center gap-1.5 text-sm font-medium text-blue-950"
+                    className="flex items-center gap-1.5 text-sm font-medium text-foreground"
                   >
-                    <FileText className="size-4 text-blue-600" />
+                    <FileText className="size-4 text-primary" />
                     Your Written Answer
                   </Label>
                   <Textarea
@@ -750,9 +750,9 @@ export function PublicCbtPortal() {
                       const val = e.target.value
                       setTheoryAnswers((prev) => ({ ...prev, [qId]: val }))
                     }}
-                    className="resize-y border-blue-200 focus-visible:border-blue-600"
+                    className="resize-y border-border focus-visible:border-primary"
                   />
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     This theory response will be reviewed and scored by an
                     administrator before your final score email is sent.
                   </p>
@@ -781,8 +781,8 @@ export function PublicCbtPortal() {
                         className={cn(
                           "flex cursor-pointer items-center gap-3.5 rounded-xl border p-4 transition-all",
                           isSelected
-                            ? "border-blue-600 bg-blue-50/70 ring-1 ring-blue-600/20"
-                            : "border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/30"
+                            ? "border-primary bg-primary/10 ring-1 ring-primary/25"
+                            : "border-border bg-card hover:border-primary/50 hover:bg-secondary/30"
                         )}
                       >
                         <RadioGroupItem value={String(optIdx)} id={optionId} />
@@ -790,13 +790,13 @@ export function PublicCbtPortal() {
                           className={cn(
                             "flex size-6 shrink-0 items-center justify-center rounded-md text-xs font-bold",
                             isSelected
-                              ? "bg-blue-600 text-white"
-                              : "bg-slate-100 text-slate-600"
+                              ? "bg-primary text-white"
+                              : "bg-muted text-muted-foreground"
                           )}
                         >
                           {String.fromCharCode(65 + optIdx)}
                         </span>
-                        <span className="text-sm font-medium text-slate-800">
+                        <span className="text-sm font-medium text-foreground">
                           {optionText}
                         </span>
                       </label>
@@ -806,13 +806,13 @@ export function PublicCbtPortal() {
               )}
             </CardContent>
 
-            <CardFooter className="flex items-center justify-between border-t border-blue-100/70 bg-slate-50/60 px-6 py-4">
+            <CardFooter className="flex items-center justify-between border-t border-border bg-secondary/40 px-6 py-4">
               <Button
                 type="button"
                 variant="outline"
                 disabled={currentIndex === 0}
                 onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-                className="gap-1.5 border-blue-200 text-blue-700 hover:bg-blue-50"
+                className="gap-1.5 border-border text-primary hover:bg-secondary"
               >
                 <ArrowLeft className="size-4" />
                 Previous
@@ -827,7 +827,7 @@ export function PublicCbtPortal() {
                         Math.min(questions.length - 1, i + 1)
                       )
                     }
-                    className="gap-1.5 bg-blue-600 text-white hover:bg-blue-700"
+                    className="gap-1.5 bg-primary text-white hover:bg-primary/90"
                   >
                     Next Question
                     <ArrowRight className="size-4" />
@@ -839,7 +839,7 @@ export function PublicCbtPortal() {
                         <Button
                           type="button"
                           disabled={submitting}
-                          className="gap-1.5 bg-blue-600 text-white shadow-sm shadow-blue-600/20 hover:bg-blue-700"
+                          className="gap-1.5 bg-primary text-white shadow-sm shadow-primary/20 hover:bg-primary/90"
                         />
                       }
                     >
@@ -867,7 +867,7 @@ export function PublicCbtPortal() {
                         <AlertDialogCancel>Review Answers</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => void handleSubmitExam(false)}
-                          className="bg-blue-600 text-white hover:bg-blue-700"
+                          className="bg-primary text-white hover:bg-primary/90"
                         >
                           Confirm &amp; Submit
                         </AlertDialogAction>
@@ -884,25 +884,25 @@ export function PublicCbtPortal() {
       {/* STEP 3: RESULT + DIGITAL ADVISOR CHIP + FULL REVIEW */}
       {step === "result" && result && (
         <div className="space-y-6">
-          <Card className="overflow-hidden border-blue-200 bg-white shadow-md shadow-blue-950/5">
-            <CardHeader className="border-b border-blue-100 bg-blue-50/40 p-6">
+          <Card className="overflow-hidden border-border bg-card shadow-md shadow-black/5">
+            <CardHeader className="border-b border-border bg-secondary/40 p-6">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <Badge className="mb-2 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                  <Badge className="mb-2 bg-primary/15 text-primary hover:bg-primary/15">
                     {result.submission.roleName}
                   </Badge>
-                  <CardTitle className="text-2xl text-blue-950">
+                  <CardTitle className="text-2xl text-foreground">
                     {result.submission.fullName}
                   </CardTitle>
                   <CardDescription className="mt-0.5">
                     {result.submission.email} • {result.submission.phone}
                   </CardDescription>
                 </div>
-                <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 px-6 py-3.5 text-center text-white shadow-sm">
+                <div className="rounded-2xl bg-gradient-to-br from-[#062950] to-[#0b3a6c] px-6 py-3.5 text-center text-white shadow-sm">
                   {result.submission.gradingStatus === "pending_review" ? (
                     <>
                       <div className="text-lg font-bold">Pending Theory</div>
-                      <div className="text-xs font-medium text-blue-100">
+                      <div className="text-xs font-medium text-[#8fa6be]">
                         Objective: {result.submission.score} pts so far
                       </div>
                     </>
@@ -911,7 +911,7 @@ export function PublicCbtPortal() {
                       <div className="text-3xl font-extrabold tracking-tight">
                         {result.submission.percentage}%
                       </div>
-                      <div className="text-xs font-medium text-blue-100">
+                      <div className="text-xs font-medium text-[#8fa6be]">
                         {result.submission.score} /{" "}
                         {result.submission.totalPoints} points
                       </div>
@@ -928,8 +928,8 @@ export function PublicCbtPortal() {
               />
 
               {result.submission.gradingStatus === "pending_review" ? (
-                <Alert className="border-blue-200 bg-blue-50/70 text-blue-950">
-                  <Clock className="size-4 text-blue-600" />
+                <Alert className="border-border bg-primary/10 text-foreground">
+                  <Clock className="size-4 text-primary" />
                   <AlertTitle>Awaiting Theory Grading</AlertTitle>
                   <AlertDescription>
                     Because this assessment includes theory questions, an
@@ -939,8 +939,8 @@ export function PublicCbtPortal() {
                   </AlertDescription>
                 </Alert>
               ) : result.submission.emailSent ? (
-                <Alert className="border-blue-200 bg-blue-50/60 text-blue-900">
-                  <MailCheck className="size-4 text-blue-600" />
+                <Alert className="border-border bg-secondary/60 text-foreground">
+                  <MailCheck className="size-4 text-primary" />
                   <AlertTitle>Result Sent via Brevo</AlertTitle>
                   <AlertDescription>
                     A copy of your score, Digital Advisor Chip, and answer
@@ -962,12 +962,12 @@ export function PublicCbtPortal() {
             </CardContent>
 
             {result.submission.allowRetake && (
-              <CardFooter className="border-t border-blue-100/70 bg-slate-50/60 px-6 py-4">
+              <CardFooter className="border-t border-border bg-secondary/40 px-6 py-4">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleReset}
-                  className="gap-2 border-blue-200 text-blue-700 hover:bg-blue-50"
+                  className="gap-2 border-border text-primary hover:bg-secondary"
                 >
                   <RotateCcw className="size-4" />
                   Take Another Assessment
@@ -976,9 +976,9 @@ export function PublicCbtPortal() {
             )}
           </Card>
 
-          <Card className="overflow-hidden border-blue-100 bg-white shadow-sm">
-            <CardHeader className="border-b border-blue-100/70 bg-blue-50/30 px-6 py-4">
-              <CardTitle className="text-base text-blue-950">
+          <Card className="overflow-hidden border-border bg-card shadow-sm">
+            <CardHeader className="border-b border-border bg-secondary/30 px-6 py-4">
+              <CardTitle className="text-base text-foreground">
                 Submitted Answers &amp; Review
               </CardTitle>
               <CardDescription>
@@ -993,22 +993,22 @@ export function PublicCbtPortal() {
                   className={cn(
                     "rounded-xl border border-l-4 p-4",
                     item.questionType === "theory"
-                      ? "border-blue-100 border-l-blue-400 bg-blue-50/20"
+                      ? "border-border border-l-primary/70 bg-secondary/20"
                       : item.isCorrect
-                        ? "border-blue-100 border-l-blue-600 bg-white"
+                        ? "border-border border-l-primary bg-card"
                         : "border-red-100 border-l-red-500 bg-red-50/20"
                   )}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <p className="font-semibold text-blue-950">
+                    <p className="font-semibold text-foreground">
                       {idx + 1}. {item.prompt}
                     </p>
                     {item.questionType === "theory" ? (
-                      <Badge className="shrink-0 bg-blue-100 text-blue-800 hover:bg-blue-100">
+                      <Badge className="shrink-0 bg-primary/15 text-primary hover:bg-primary/15">
                         Pending Score ({item.maxPoints} pts)
                       </Badge>
                     ) : item.isCorrect ? (
-                      <Badge className="shrink-0 gap-1 bg-blue-100 text-blue-700 hover:bg-blue-100">
+                      <Badge className="shrink-0 gap-1 bg-primary/15 text-primary hover:bg-primary/15">
                         <CheckCircle2 className="size-3.5" />
                         Correct
                       </Badge>
@@ -1021,29 +1021,29 @@ export function PublicCbtPortal() {
                   </div>
 
                   {item.questionType === "theory" ? (
-                    <div className="mt-2.5 rounded-lg border border-blue-100 bg-white p-3 text-sm text-slate-700">
-                      <span className="block text-xs font-semibold text-blue-700">
+                    <div className="mt-2.5 rounded-lg border border-border bg-card p-3 text-sm text-foreground/90">
+                      <span className="block text-xs font-semibold text-primary">
                         Your Written Answer:
                       </span>
                       {item.selectedOption}
                     </div>
                   ) : (
                     <div className="mt-2.5 grid gap-1 text-sm sm:grid-cols-2">
-                      <p className="text-slate-700">
-                        <span className="font-medium text-slate-500">
+                      <p className="text-foreground/90">
+                        <span className="font-medium text-muted-foreground">
                           Your Answer:{" "}
                         </span>
                         {item.selectedOption}
                       </p>
-                      <p className="font-medium text-blue-700">
-                        <span className="text-blue-500">Correct Answer: </span>
+                      <p className="font-medium text-primary">
+                        <span className="text-primary/80">Correct Answer: </span>
                         {item.correctOption}
                       </p>
                     </div>
                   )}
 
                   {item.explanation && item.questionType !== "theory" ? (
-                    <p className="mt-2 rounded-lg bg-blue-50/70 p-2.5 text-xs text-blue-900">
+                    <p className="mt-2 rounded-lg bg-primary/10 p-2.5 text-xs text-foreground">
                       <strong>Advisor Note:</strong> {item.explanation}
                     </p>
                   ) : null}

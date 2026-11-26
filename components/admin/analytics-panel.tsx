@@ -110,10 +110,10 @@ export function AnalyticsPanel({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-blue-950">
+          <h2 className="text-lg font-semibold text-foreground">
             Assessment Analytics
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-muted-foreground">
             Monitor answer accuracy rates, role performance, and Brevo email
             delivery.
           </p>
@@ -123,7 +123,7 @@ export function AnalyticsPanel({
           value={roleFilter}
           onValueChange={(val) => val && setRoleFilter(val)}
         >
-          <SelectTrigger className="w-56 bg-white">
+          <SelectTrigger className="w-56 bg-card">
             <SelectValue placeholder="Filter by role" />
           </SelectTrigger>
           <SelectContent>
@@ -139,72 +139,72 @@ export function AnalyticsPanel({
 
       {/* KPI Cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-blue-100 bg-white shadow-xs">
+        <Card className="border-border bg-card shadow-xs">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription className="font-medium text-slate-600">
+            <CardDescription className="font-medium text-muted-foreground">
               Total Submissions
             </CardDescription>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
               <Users className="size-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight text-blue-950">
+            <div className="text-3xl font-bold tracking-tight text-foreground">
               {loading ? "—" : summary?.totalSubmissions ?? 0}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-blue-100 bg-white shadow-xs">
+        <Card className="border-border bg-card shadow-xs">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription className="font-medium text-slate-600">
+            <CardDescription className="font-medium text-muted-foreground">
               Average Score
             </CardDescription>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
               <TrendingUp className="size-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight text-blue-950">
+            <div className="text-3xl font-bold tracking-tight text-foreground">
               {loading ? "—" : `${summary?.averagePercentage ?? 0}%`}
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-blue-100 bg-white shadow-xs">
+        <Card className="border-border bg-card shadow-xs">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription className="font-medium text-slate-600">
+            <CardDescription className="font-medium text-muted-foreground">
               Correct Answer Rate
             </CardDescription>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
               <CheckCircle2 className="size-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight text-blue-600">
+            <div className="text-3xl font-bold tracking-tight text-primary">
               {loading ? "—" : `${summary?.correctRate ?? 0}%`}
             </div>
-            <p className="mt-0.5 text-xs text-slate-500">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {summary?.correctAnswers ?? 0} / {summary?.totalAnswers ?? 0}{" "}
               answers
             </p>
           </CardContent>
         </Card>
 
-        <Card className="border-blue-100 bg-white shadow-xs">
+        <Card className="border-border bg-card shadow-xs">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardDescription className="font-medium text-slate-600">
+            <CardDescription className="font-medium text-muted-foreground">
               Brevo Emails Sent
             </CardDescription>
-            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-secondary text-primary">
               <MailCheck className="size-4" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold tracking-tight text-blue-950">
+            <div className="text-3xl font-bold tracking-tight text-foreground">
               {loading ? "—" : `${summary?.emailDeliveryRate ?? 0}%`}
             </div>
-            <p className="mt-0.5 text-xs text-slate-500">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {summary?.emailsSentCount ?? 0} delivered
             </p>
           </CardContent>
@@ -213,9 +213,9 @@ export function AnalyticsPanel({
 
       {/* Pie Chart + Role/Advisor Breakdown */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="border-blue-100 bg-white shadow-xs">
-          <CardHeader className="border-b border-blue-50">
-            <CardTitle className="text-base text-blue-950">
+        <Card className="border-border bg-card shadow-xs">
+          <CardHeader className="border-b border-border">
+            <CardTitle className="text-base text-foreground">
               Answer Rate Distribution (Pie Chart)
             </CardTitle>
             <CardDescription>
@@ -225,10 +225,10 @@ export function AnalyticsPanel({
           <CardContent className="pt-6">
             {loading ? (
               <div className="flex h-64 items-center justify-center">
-                <Loader2 className="size-6 animate-spin text-blue-600" />
+                <Loader2 className="size-6 animate-spin text-primary" />
               </div>
             ) : (summary?.totalAnswers ?? 0) === 0 ? (
-              <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-blue-200 bg-blue-50/30 text-sm text-slate-500">
+              <div className="flex h-64 items-center justify-center rounded-xl border border-dashed border-border bg-secondary/30 text-sm text-muted-foreground">
                 No graded answers yet. Submissions will appear here.
               </div>
             ) : (
@@ -264,9 +264,9 @@ export function AnalyticsPanel({
         </Card>
 
         <div className="space-y-6">
-          <Card className="border-blue-100 bg-white shadow-xs">
-            <CardHeader className="border-b border-blue-50">
-              <CardTitle className="text-base text-blue-950">
+          <Card className="border-border bg-card shadow-xs">
+            <CardHeader className="border-b border-border">
+              <CardTitle className="text-base text-foreground">
                 Performance by Role
               </CardTitle>
               <CardDescription>
@@ -275,20 +275,20 @@ export function AnalyticsPanel({
             </CardHeader>
             <CardContent className="space-y-4 pt-5">
               {!data?.roleBreakdown.length ? (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-muted-foreground">
                   No roles configured yet.
                 </p>
               ) : (
                 data.roleBreakdown.map((item) => (
                   <div key={item.roleId} className="space-y-1.5">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="font-medium text-blue-950">
+                      <span className="font-medium text-foreground">
                         {item.roleName}
                       </span>
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-muted-foreground">
                         {item.submissionsCount} submission
                         {item.submissionsCount === 1 ? "" : "s"} •{" "}
-                        <strong className="text-blue-700">
+                        <strong className="text-primary">
                           {item.averagePercentage}%
                         </strong>
                       </span>
@@ -300,9 +300,9 @@ export function AnalyticsPanel({
             </CardContent>
           </Card>
 
-          <Card className="border-blue-100 bg-white shadow-xs">
-            <CardHeader className="border-b border-blue-50">
-              <CardTitle className="text-base text-blue-950">
+          <Card className="border-border bg-card shadow-xs">
+            <CardHeader className="border-b border-border">
+              <CardTitle className="text-base text-foreground">
                 Digital Advisor Chip Summary
               </CardTitle>
               <CardDescription>
@@ -311,17 +311,17 @@ export function AnalyticsPanel({
             </CardHeader>
             <CardContent className="flex flex-wrap gap-3 pt-5">
               {!data?.advisorBreakdown.length ? (
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-muted-foreground">
                   No advisor chips awarded yet.
                 </p>
               ) : (
                 data.advisorBreakdown.map((item) => (
                   <div
                     key={item.advisorChip}
-                    className="flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50/40 px-3 py-2"
+                    className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 py-2"
                   >
                     <AdvisorChip label={item.advisorChip} compact />
-                    <span className="text-sm font-bold text-blue-950">
+                    <span className="text-sm font-bold text-foreground">
                       {item.count}
                     </span>
                   </div>

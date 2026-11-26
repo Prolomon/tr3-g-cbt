@@ -189,10 +189,10 @@ export function QuestionsManager({
   return (
     <div className="grid gap-6 lg:grid-cols-5">
       {/* Create Question Form */}
-      <Card className="border-blue-100 bg-white lg:col-span-2">
-        <CardHeader className="border-b border-blue-50">
-          <CardTitle className="flex items-center gap-2 text-base text-blue-950">
-            <Plus className="size-4 text-blue-600" />
+      <Card className="border-border bg-card lg:col-span-2">
+        <CardHeader className="border-b border-border">
+          <CardTitle className="flex items-center gap-2 text-base text-foreground">
+            <Plus className="size-4 text-primary" />
             Add Question
           </CardTitle>
           <CardDescription>
@@ -265,7 +265,7 @@ export function QuestionsManager({
                   <div className="space-y-2">
                     {options.map((opt, idx) => (
                       <div key={idx} className="flex items-center gap-2">
-                        <span className="w-5 text-xs font-bold text-blue-700">
+                        <span className="w-5 text-xs font-bold text-primary">
                           {String.fromCharCode(65 + idx)}.
                         </span>
                         <Input
@@ -316,7 +316,7 @@ export function QuestionsManager({
               </>
             ) : (
               <div className="space-y-3">
-                <div className="rounded-xl border border-blue-200 bg-blue-50/60 p-3 text-xs leading-relaxed text-blue-900">
+                <div className="rounded-xl border border-border bg-secondary/60 p-3 text-xs leading-relaxed text-foreground">
                   <strong>Theory Mode:</strong> No options or auto-mark key
                   required. Candidates will answer in a textarea, and you will
                   score their response in <strong>Submissions</strong> before
@@ -356,7 +356,7 @@ export function QuestionsManager({
             <Button
               type="submit"
               disabled={saving}
-              className="w-full gap-2 bg-blue-600 text-white hover:bg-blue-700"
+              className="w-full gap-2 bg-primary text-white hover:bg-primary/90"
             >
               {saving ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -370,11 +370,11 @@ export function QuestionsManager({
       </Card>
 
       {/* Question Bank List */}
-      <Card className="border-blue-100 bg-white lg:col-span-3">
-        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-blue-50">
+      <Card className="border-border bg-card lg:col-span-3">
+        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 border-b border-border">
           <div>
-            <CardTitle className="flex items-center gap-2 text-base text-blue-950">
-              <HelpCircle className="size-4 text-blue-600" />
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <HelpCircle className="size-4 text-primary" />
               Question Bank ({questions.length})
             </CardTitle>
             <CardDescription>
@@ -400,10 +400,10 @@ export function QuestionsManager({
           </Select>
         </CardHeader>
 
-        <CardContent className="divide-y divide-blue-50 pt-2">
+        <CardContent className="divide-y divide-border pt-2">
           {loading ? (
             <div className="flex justify-center py-10">
-              <Loader2 className="size-6 animate-spin text-blue-600" />
+              <Loader2 className="size-6 animate-spin text-primary" />
             </div>
           ) : questions.length === 0 ? (
             <p className="py-10 text-center text-sm text-muted-foreground">
@@ -415,15 +415,15 @@ export function QuestionsManager({
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge className="bg-blue-50 text-blue-700 hover:bg-blue-100">
+                      <Badge className="bg-secondary text-primary hover:bg-primary/15">
                         {q.roleName}
                       </Badge>
                       <Badge
                         variant="outline"
                         className={
                           q.questionType === "theory"
-                            ? "border-blue-300 bg-blue-600 text-white"
-                            : "border-slate-200 text-slate-700"
+                            ? "border-primary/50 bg-primary text-white"
+                            : "border-border text-foreground/90"
                         }
                       >
                         {q.questionType === "theory" ? "Theory" : "Objective"}
@@ -432,7 +432,7 @@ export function QuestionsManager({
                         {q.points} pt{q.points === 1 ? "" : "s"}
                       </Badge>
                     </div>
-                    <p className="font-medium text-blue-950">{q.prompt}</p>
+                    <p className="font-medium text-foreground">{q.prompt}</p>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -454,8 +454,8 @@ export function QuestionsManager({
                 </div>
 
                 {q.questionType === "theory" ? (
-                  <div className="flex items-center gap-2 rounded-md border border-blue-100 bg-blue-50/40 px-3 py-2 text-xs text-blue-800">
-                    <FileText className="size-3.5 shrink-0 text-blue-600" />
+                  <div className="flex items-center gap-2 rounded-md border border-border bg-secondary/40 px-3 py-2 text-xs text-primary">
+                    <FileText className="size-3.5 shrink-0 text-primary" />
                     <span>
                       Written response question (manually scored by admin).
                     </span>
@@ -469,12 +469,12 @@ export function QuestionsManager({
                           key={idx}
                           className={
                             isCorrect
-                              ? "flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-800"
-                              : "rounded-md border border-slate-100 bg-slate-50 px-2.5 py-1 text-xs text-slate-600"
+                              ? "flex items-center gap-1.5 rounded-md border border-border bg-secondary px-2.5 py-1 text-xs font-semibold text-primary"
+                              : "rounded-md border border-border bg-secondary/50 px-2.5 py-1 text-xs text-muted-foreground"
                           }
                         >
                           {isCorrect ? (
-                            <CheckCircle2 className="size-3.5 shrink-0 text-blue-600" />
+                            <CheckCircle2 className="size-3.5 shrink-0 text-primary" />
                           ) : null}
                           <span>
                             {String.fromCharCode(65 + idx)}. {opt}
